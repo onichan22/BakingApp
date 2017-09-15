@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ingredient_tv"
+            android:text="@string/ingredients"
+            android:layout_width="400dp"
+            android:layout_height="100dp"
+            android:clickable="true"
+            android:onClick="display_ingr"
+            />
+
+        <FrameLayout android:id="@+id/detail_container"
+            android:layout_width="400dp"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray" />
+
+    <FrameLayout android:id="@+id/steps_detail_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"/>
+
+</LinearLayout>

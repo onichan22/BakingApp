@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+        android:id="@+id/media_player_view"
+        android:layout_width="match_parent"
+        android:layout_height="250dp" />
+
+    <TextView
+        android:id="@+id/step_details_tv"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        tools:text="test step details" />
+
+    <LinearLayout
+        android:id="@+id/navigation_tv"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:text="next or previous steps">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/prev_step"
+            android:text="Previous Step"
+            android:visibility="visible"
+            android:onClick="prev_step"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:id="@+id/next_step"
+            android:text="Next Step"
+            android:onClick="next_step"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
