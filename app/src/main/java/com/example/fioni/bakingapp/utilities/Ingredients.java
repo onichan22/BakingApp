@@ -6,15 +6,15 @@ package com.example.fioni.bakingapp.utilities;
 
 public class Ingredients {
     private String r_id;
-    private int quantity;
+    private String quantity;
     private String measure;
     private String ingr_name;
 
 
-    public Ingredients(String r_id, String string, String aIngredientString, String ingr_name) {
+    public Ingredients() {
     }
 
-    public Ingredients(String r_id, int quantity, String measure, String ingr_name) {
+    public Ingredients(String r_id, String quantity, String measure, String ingr_name) {
         this.r_id = r_id;
         this.quantity = quantity;
         this.measure = measure;
@@ -29,11 +29,11 @@ public class Ingredients {
         this.r_id = r_id;
     }
 
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 

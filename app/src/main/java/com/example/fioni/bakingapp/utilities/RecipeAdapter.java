@@ -156,9 +156,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 };break;
             case 1:
                 RecipeAdapterViewHolder1 viewHolder1 = (RecipeAdapterViewHolder1)holder;
-                viewHolder1.textView_q.setText("hello");
-                //viewHolder1.textView_m.setText(mIngrData.get(position).getMeasure());
-                //viewHolder1.textView_in.setText(mIngrData.get(position).getIngr_name());
+                viewHolder1.textView_q.setText(mIngrData.get(position).getQuantity());
+                viewHolder1.textView_m.setText(mIngrData.get(position).getMeasure());
+                viewHolder1.textView_in.setText(mIngrData.get(position).getIngr_name());
                 ;break;
         }
 
