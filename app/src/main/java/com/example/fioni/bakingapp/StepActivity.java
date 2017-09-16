@@ -43,9 +43,9 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
 
             //stepsFragment.setRecipeId(mRecipe.getId());
 
-            StepDetailsFragment stepDetailsFragment = new StepDetailsFragment();
+            IngredientsFragment ingredientsFragment = new IngredientsFragment();
             fragmentManager.beginTransaction()
-                    .add(R.id.steps_detail_container, stepDetailsFragment)
+                    .add(R.id.steps_detail_container, ingredientsFragment)
                     .commit();
            /* if(mStep == null){
                 Toast.makeText(this, "no step", Toast.LENGTH_SHORT).show();

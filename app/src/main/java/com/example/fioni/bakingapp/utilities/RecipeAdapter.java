@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.fioni.bakingapp.R;
@@ -30,6 +31,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_ONE = 0;
     private static final int TYPE_GROUP = 1;
     private final RecipeAdapterOnClickHandler mClickHandler;
+    public int mSelectedItem = -1;
 
     public interface RecipeAdapterOnClickHandler {
 
@@ -45,12 +47,26 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public class RecipeAdapterViewHolder0 extends RecyclerView.ViewHolder implements View.OnClickListener {
         CardView cardView;
         TextView textView;
+        RadioButton mRadio;
+        int mSelectedItem = -1;
 
         public RecipeAdapterViewHolder0(View itemView) {
             super(itemView);
             if (mIndicator == RECIPE_INDICATOR) {
                 cardView = (CardView) itemView.findViewById(R.id.card_view);
                 textView = (TextView) itemView.findViewById(R.id.recipename_text);
+                mRadio = (RadioButton) itemView.findViewById(R.id.radio);
+
+                View.OnClickListener buttonListener = new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        mSelectedItem = getAdapterPosition();
+                        notifyItemRangeChanged(0, mRecipeData.size());
+                    }
+                };
+
+                mRadio.setOnClickListener(buttonListener);
+                
             }
             if (mIndicator == STEP_INDICATOR) {
                 textView = (TextView) itemView.findViewById(R.id.stepname_text);
@@ -62,8 +78,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             if (mIndicator == RECIPE_INDICATOR) {
-                Recipe aRecipe = mRecipeData.get(adapterPosition);
-                mClickHandler.onClick(aRecipe);
+                mSelectedItem = adapterPosition;
+                if (v == textView){
+                    Recipe aRecipe = mRecipeData.get(adapterPosition);
+                    mClickHandler.onClick(aRecipe);
+                }
+
+
             }
             if (mIndicator == STEP_INDICATOR) {
                 Step aStep = mStepData.get(adapterPosition);
@@ -146,6 +167,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     case 1:
                         mText = mRecipeData.get(position).getName();
                         viewHolder0.textView.setText(mText);
+                        viewHolder0.mRadio.setChecked(position == mSelectedItem);
                         break;
                     case 2:
                         mText = mStepData.get(position).getShort_desc();

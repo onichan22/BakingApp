@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="75dp"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="10"
         app:cardElevation="2dp"
         app:cardBackgroundColor="@color/primary_light">
 
         <TextView
             android:id="@+id/recipename_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/primary_text"/>
-
+            android:layout_height="31dp"
+            android:layout_gravity="top|center_vertical|center"
+            android:gravity="top|center"
+            android:textColor="@color/primary_text"
+            tools:text="Recipe" />
     </android.support.v7.widget.CardView>
+    <RadioButton
+        android:id="@+id/radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"/>
 
 </LinearLayout>
