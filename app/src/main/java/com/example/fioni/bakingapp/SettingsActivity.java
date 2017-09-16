@@ -25,7 +25,8 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent recipeIntent = getIntent();
-        mRecipes = recipeIntent.getBundleExtra("recipes").getParcelableArrayList("recipes");
+        //mRecipes = recipeIntent.getBundleExtra("recipes").getParcelableArrayList("recipes");
+        mRecipes = recipeIntent.getParcelableArrayListExtra("recipes");
         setContentView(R.layout.activity_settings);
         mRecyclerView = (RecyclerView) findViewById(R.id.settings_rv);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));

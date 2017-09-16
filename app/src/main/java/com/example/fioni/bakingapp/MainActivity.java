@@ -48,9 +48,10 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intentSettings = new Intent(this, SettingsActivity.class);
-        Bundle b = new Bundle();
+        /*Bundle b = new Bundle();
         b.putParcelableArrayList("recipes", mRecipeArrayList);
-        intentSettings.putExtra("recipes", b);
+        intentSettings.putExtra("recipes", b);*/
+        intentSettings.putParcelableArrayListExtra("recipes",mRecipeArrayList);
         startActivity(intentSettings);
         return super.onOptionsItemSelected(item);
     }
