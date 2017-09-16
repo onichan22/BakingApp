@@ -33,6 +33,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Settin
                 public void onClick(View v) {
                     mSelectedItem = getAdapterPosition();
                     notifyItemRangeChanged(0, mRecipe.size());
+                    //  TODO: handler
                 }
             };
             this.itemView.setOnClickListener(clickListener);
@@ -50,7 +51,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Settin
     @Override
     public void onBindViewHolder(SettingsAdapterViewHolder holder, int position) {
         holder.mRadio.setChecked(position == mSelectedItem);
-        holder.mText.setText(mRecipe.get(position).getImage());
+        holder.mText.setText(mRecipe.get(position).getName());
     }
 
     @Override

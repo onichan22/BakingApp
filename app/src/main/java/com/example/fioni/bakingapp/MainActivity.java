@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
         /*Bundle b = new Bundle();
         b.putParcelableArrayList("recipes", mRecipeArrayList);
         intentSettings.putExtra("recipes", b);*/
-        intentSettings.putExtra("recipes",mRecipeArrayList);
+        intentSettings.putParcelableArrayListExtra("recipes",mRecipeArrayList);
         startActivity(intentSettings);
         return super.onOptionsItemSelected(item);
     }

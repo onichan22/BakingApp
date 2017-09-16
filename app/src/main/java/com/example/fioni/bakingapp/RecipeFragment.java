@@ -67,7 +67,13 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
             mCallback = (OnObjectClickListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement OnImageClickListener");
+                    + " must implement OnObjectClickListener");
+        }
+        try {
+            mCallback_rec = (GiveRecipeList) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement GiveRecipeList");
         }
     }
 
@@ -136,7 +142,8 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
         protected void onPostExecute(ArrayList<Recipe> recipeDataResults) {
             if (recipeDataResults != null) {
                 mRecipeAdapter.setRecipeData(recipeDataResults);
-                mCallback_rec.recipeList(recipeDataResults);            }
+                mCallback_rec.recipeList(recipeDataResults);
+            }
         }
     }
 
