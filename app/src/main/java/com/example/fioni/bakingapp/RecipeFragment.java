@@ -34,6 +34,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
     private View mView;
     private RecyclerView mRecyclerView;
     private RecipeAdapter mRecipeAdapter;
+    private ArrayList<Recipe> mRecipeList;
     OnObjectClickListener mCallback;
 
     public interface OnObjectClickListener{
@@ -129,8 +130,13 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
         protected void onPostExecute(ArrayList<Recipe> recipeDataResults) {
             if (recipeDataResults != null) {
                 mRecipeAdapter.setRecipeData(recipeDataResults);
+                mRecipeList = recipeDataResults;
             }
         }
+    }
+
+    public ArrayList<Recipe> getRecipeList(){
+        return mRecipeList;
     }
 
 }

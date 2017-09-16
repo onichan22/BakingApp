@@ -28,6 +28,9 @@
         <activity
             android:name=".IngredientsActivity"
             android:label="Ingredients Activity" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="Settings Activity" />
 
         <receiver android:name=".BakingAppWidgetProvider">
             <intent-filter>
