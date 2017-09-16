@@ -12,7 +12,7 @@ import com.example.fioni.bakingapp.utilities.Recipe;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements RecipeFragment.OnObjectClickListener{
+public class MainActivity extends AppCompatActivity implements RecipeFragment.OnObjectClickListener, RecipeFragment.GiveRecipeList{
     public ArrayList<Recipe> mRecipeArrayList;
 
     @Override
@@ -27,9 +27,9 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
                 .add(R.id.recipe_container, recipeFragment)
                 .commit();
 
-        mRecipeArrayList = recipeFragment.getRecipeList();
-
     }
+
+
 
     @Override
     public void onSelectedObj(Recipe recipe) {
@@ -38,6 +38,12 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
         intent.putExtra("thisRecipe", recipe);
         startActivity(intent);
     }
+
+    @Override
+    public void recipeList(ArrayList<Recipe> recipe) {
+        mRecipeArrayList = recipe;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -51,8 +57,9 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
         /*Bundle b = new Bundle();
         b.putParcelableArrayList("recipes", mRecipeArrayList);
         intentSettings.putExtra("recipes", b);*/
-        intentSettings.putParcelableArrayListExtra("recipes",mRecipeArrayList);
+        intentSettings.putExtra("recipes",mRecipeArrayList);
         startActivity(intentSettings);
         return super.onOptionsItemSelected(item);
     }
+
 }

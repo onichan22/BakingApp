@@ -36,9 +36,14 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
     private RecipeAdapter mRecipeAdapter;
     private ArrayList<Recipe> mRecipeList;
     OnObjectClickListener mCallback;
+    GiveRecipeList mCallback_rec;
 
     public interface OnObjectClickListener{
         void onSelectedObj(Recipe recipe);
+    }
+
+    public interface GiveRecipeList{
+        void recipeList(ArrayList<Recipe> recipe);
     }
 
     public  RecipeFragment(){
@@ -87,6 +92,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
             URL recipeSearchUrl = NetworkUtils.buildUrl();
             new QueryTask().execute(recipeSearchUrl);
             //Toast.makeText(getContext(), "Test", Toast.LENGTH_LONG);
+
         }
 
         return mView;
@@ -130,13 +136,12 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
         protected void onPostExecute(ArrayList<Recipe> recipeDataResults) {
             if (recipeDataResults != null) {
                 mRecipeAdapter.setRecipeData(recipeDataResults);
-                mRecipeList = recipeDataResults;
-            }
+                mCallback_rec.recipeList(recipeDataResults);            }
         }
     }
 
-    public ArrayList<Recipe> getRecipeList(){
-        return mRecipeList;
-    }
+    //public ArrayList<Recipe> getRecipeList(){
+    //    return mRecipeList;
+    //}
 
 }
