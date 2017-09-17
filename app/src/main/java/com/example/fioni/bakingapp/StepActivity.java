@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.fioni.bakingapp.fragments.IngredientsFragment;
+import com.example.fioni.bakingapp.fragments.StepDetailsFragment;
+import com.example.fioni.bakingapp.fragments.StepsFragment;
 import com.example.fioni.bakingapp.utilities.Recipe;
 import com.example.fioni.bakingapp.utilities.Step;
 

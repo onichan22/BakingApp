@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.fioni.bakingapp.fragments.IngredientsFragment;
+
 /**
  * Created by fioni on 9/15/2017.
  */

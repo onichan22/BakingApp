@@ -18,6 +18,12 @@ import java.util.ArrayList;
 public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.SettingsAdapterViewHolder>{
     public int mSelectedItem = -1;
     public ArrayList<Recipe> mRecipe;
+    SettingsAdapterOnClickHandler handler;
+
+    public interface SettingsAdapterOnClickHandler {
+
+        void onClick(Recipe aRecipe);
+    }
 
     public class SettingsAdapterViewHolder extends RecyclerView.ViewHolder {
 
@@ -34,6 +40,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Settin
                     mSelectedItem = getAdapterPosition();
                     notifyItemRangeChanged(0, mRecipe.size());
                     //  TODO: handler
+                    handler.onClick(mRecipe.get(mSelectedItem));
                 }
             };
             this.itemView.setOnClickListener(clickListener);

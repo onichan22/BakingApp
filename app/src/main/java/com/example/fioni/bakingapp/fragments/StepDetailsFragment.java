@@ -1,4 +1,4 @@
-package com.example.fioni.bakingapp;
+package com.example.fioni.bakingapp.fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fioni.bakingapp.R;
 import com.example.fioni.bakingapp.utilities.BakingJSonUtil;
 import com.example.fioni.bakingapp.utilities.NetworkUtils;
 import com.example.fioni.bakingapp.utilities.Step;
