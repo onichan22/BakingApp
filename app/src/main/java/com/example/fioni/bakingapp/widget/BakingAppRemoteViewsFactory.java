@@ -56,7 +56,13 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
 
     @Override
     public int getCount() {
-        return ingredientsArrayList.size();
+        int count = 0;
+        if (null == ingredientsArrayList) {
+            return 0;
+        } else {
+            count = ingredientsArrayList.size();
+        }
+        return count;
     }
 
     @Override

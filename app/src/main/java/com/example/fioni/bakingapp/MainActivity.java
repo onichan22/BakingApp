@@ -7,13 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.fioni.bakingapp.fragments.IngredientsFragment;
+import com.example.fioni.bakingapp.fragments.RecipeFragment;
 import com.example.fioni.bakingapp.utilities.Recipe;
 
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements IngredientsFragment.RecipeFragment.OnObjectClickListener, IngredientsFragment.RecipeFragment.GiveRecipeList {
+public class MainActivity extends AppCompatActivity implements RecipeFragment.OnObjectClickListener, RecipeFragment.GiveRecipeList {
     public ArrayList<Recipe> mRecipeArrayList;
 
     @Override
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements IngredientsFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        IngredientsFragment.RecipeFragment recipeFragment = new IngredientsFragment.RecipeFragment();
+        RecipeFragment recipeFragment = new RecipeFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         fragmentManager.beginTransaction()

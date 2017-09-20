@@ -25,7 +25,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Settin
         void onClick(Recipe aRecipe);
     }
 
-    public class SettingsAdapterViewHolder extends RecyclerView.ViewHolder {
+    public class SettingsAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public RadioButton mRadio;
         public TextView mText;
@@ -34,17 +34,14 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Settin
             super(itemView);
             mText = (TextView) itemView.findViewById(R.id.set_recipe_tv);
             mRadio = (RadioButton) itemView.findViewById(R.id.radio_button);
-            View.OnClickListener clickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mSelectedItem = getAdapterPosition();
-                    notifyItemRangeChanged(0, mRecipe.size());
-                    //  TODO: handler
-                    handler.onClick(mRecipe.get(mSelectedItem));
-                }
-            };
-            this.itemView.setOnClickListener(clickListener);
-            mRadio.setOnClickListener(clickListener);
+            itemView.setOnClickListener(this);
+            //this.itemView.setOnClickListener(clickListener);
+            //mRadio.setOnClickListener(clickListener);
+        }
+
+        @Override
+        public void onClick(View v) {
+            handler.onClick(mRecipe.get(mSelectedItem));
         }
     }
 

@@ -64,12 +64,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             int adapterPosition = getAdapterPosition();
             if (mIndicator == RECIPE_INDICATOR) {
                 mSelectedItem = adapterPosition;
-                if (v == textView){
                     Recipe aRecipe = mRecipeData.get(adapterPosition);
                     mClickHandler.onClick(aRecipe);
-                }
-
-
             }
             if (mIndicator == STEP_INDICATOR) {
                 Step aStep = mStepData.get(adapterPosition);
@@ -125,12 +121,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
                 View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
                 viewHolder = new RecipeAdapterViewHolder0(view);
-                ;break;
+                break;
             case 1:
                 layoutIdForListItem = R.layout.ingredient_list;
                 View view2 = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
                 viewHolder = new RecipeAdapterViewHolder1(view2);
-                ;
         }
         return viewHolder;
     }
@@ -159,13 +154,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         break;
                     case 3:
                         break;
-                };break;
+                }
+                break;
             case 1:
                 RecipeAdapterViewHolder1 viewHolder1 = (RecipeAdapterViewHolder1)holder;
                 viewHolder1.textView_q.setText(mIngrData.get(position).getQuantity());
                 viewHolder1.textView_m.setText(mIngrData.get(position).getMeasure());
                 viewHolder1.textView_in.setText(mIngrData.get(position).getIngr_name());
-                ;break;
+                break;
         }
 
     }
@@ -180,7 +176,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 } else {
                     count = mRecipeData.size();
                 }
-                ;
                 break;
             case 2:
                 if (null == mStepData) {
@@ -188,7 +183,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 } else {
                     count = mStepData.size();
                 }
-                ;
                 break;
             case 3:
                 if (null == mIngrData) {
@@ -196,7 +190,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 } else {
                     count = mIngrData.size();
                 }
-                ;
                 break;
         }
 

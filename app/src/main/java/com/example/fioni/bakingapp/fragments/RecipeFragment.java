@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 
 import com.example.fioni.bakingapp.R;
 import com.example.fioni.bakingapp.utilities.BakingJSonUtil;
-import com.example.fioni.bakingapp.utilities.Ingredients;
 import com.example.fioni.bakingapp.utilities.NetworkUtils;
 import com.example.fioni.bakingapp.utilities.Recipe;
 import com.example.fioni.bakingapp.utilities.RecipeAdapter;
@@ -27,23 +27,33 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Created by fioni on 9/15/2017.
+ * Created by fioni on 9/17/2017.
  */
 
-public class IngredientsFragment extends Fragment implements RecipeAdapter.RecipeAdapterOnClickHandler{
+public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdapterOnClickHandler {
 
-    public int mRecipeId;
     private View mView;
-    private RecipeAdapter mRecipeAdapter;
     private RecyclerView mRecyclerView;
+    private RecipeAdapter mRecipeAdapter;
+    private ArrayList<Recipe> mRecipeList;
+    OnObjectClickListener mCallback;
+    GiveRecipeList mCallback_rec;
 
-    public IngredientsFragment(){
+    public interface OnObjectClickListener {
+        void onSelectedObj(Recipe recipe);
+    }
+
+    public interface GiveRecipeList {
+        void recipeList(ArrayList<Recipe> recipe);
+    }
+
+    public RecipeFragment() {
 
     }
 
     public boolean isOnline() {
         ConnectivityManager cm =
-                (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
@@ -51,29 +61,54 @@ public class IngredientsFragment extends Fragment implements RecipeAdapter.Recip
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        // This makes sure that the host activity has implemented the callback interface
+        // If not, it throws an exception
+        try {
+            mCallback = (OnObjectClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnObjectClickListener");
+        }
+        try {
+            mCallback_rec = (GiveRecipeList) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement GiveRecipeList");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         mView = inflater.inflate(R.layout.recycler_view, container, false);
 
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.recyclerview);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        if (getResources().getBoolean(R.bool.small_screen)) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
+        if (!getResources().getBoolean(R.bool.small_screen)) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        }
 
         mRecipeAdapter = new RecipeAdapter(this);
         mRecyclerView.setAdapter(mRecipeAdapter);
 
         if (isOnline()) {
             URL recipeSearchUrl = NetworkUtils.buildUrl();
-            new IngredientsFragment.QueryIngredientsTask().execute(recipeSearchUrl);
+            new QueryTask().execute(recipeSearchUrl);
             //Toast.makeText(getContext(), "Test", Toast.LENGTH_LONG);
+
         }
+
         return mView;
     }
 
     @Override
     public void onClick(Recipe aRecipe) {
-        //do nothing
+        mCallback.onSelectedObj(aRecipe);
+
     }
 
     @Override
@@ -81,18 +116,18 @@ public class IngredientsFragment extends Fragment implements RecipeAdapter.Recip
         //do nothing
     }
 
-    public class QueryIngredientsTask extends AsyncTask<URL, Void, ArrayList<Ingredients>> {
+    public class QueryTask extends AsyncTask<URL, Void, ArrayList<Recipe>> {
 
         @Override
-        protected ArrayList<Ingredients> doInBackground(URL... params) {
+        protected ArrayList<Recipe> doInBackground(URL... params) {
             URL searchUrl = params[0];
             String recipeSearchResults = null;
             try {
                 recipeSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
 
-                ArrayList<Ingredients> ingredients = BakingJSonUtil.getIngredientsFromJson(getActivity(), recipeSearchResults, mRecipeId);
+                ArrayList<Recipe> recipes = BakingJSonUtil.getRecipeFromJson(getActivity(), recipeSearchResults);
 
-                return ingredients;
+                return recipes;
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -105,15 +140,16 @@ public class IngredientsFragment extends Fragment implements RecipeAdapter.Recip
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Ingredients> recipeDataResults) {
+        protected void onPostExecute(ArrayList<Recipe> recipeDataResults) {
             if (recipeDataResults != null) {
-                mRecipeAdapter.setIngredientsData(recipeDataResults);
+                mRecipeAdapter.setRecipeData(recipeDataResults);
+                mCallback_rec.recipeList(recipeDataResults);
             }
         }
     }
 
-    public void setRecipeId (String recipeId){
-        mRecipeId = Integer.parseInt(recipeId)-1;
-    }
+    //public ArrayList<Recipe> getRecipeList(){
+    //    return mRecipeList;
+    //}
 
 }
