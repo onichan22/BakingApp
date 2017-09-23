@@ -16,21 +16,31 @@ import com.example.fioni.bakingapp.utilities.Step;
 public class StepDetailsActivity extends AppCompatActivity {
     Step mStep;
     StepDetailsFragment stepDetailsFragment = new StepDetailsFragment();
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    public static String ON_STEP_KEY = "ON STEP";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            mStep = savedInstanceState.getParcelable(ON_STEP_KEY);
+
+            stepDetailsFragment.setStepId(mStep);
+        }
+
         setContentView(R.layout.activity_steps_detail);
-        Intent recipeIntent = getIntent();
-        mStep =   recipeIntent.getParcelableExtra("thisStep");
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (savedInstanceState == null) {
+            Intent recipeIntent = getIntent();
+            mStep = recipeIntent.getParcelableExtra("thisStep");
 
-        fragmentManager.beginTransaction()
-                .add(R.id.steps_detail_container, stepDetailsFragment)
-                .commit();
 
-        stepDetailsFragment.setStepId(mStep);
+            fragmentManager.beginTransaction()
+                    .add(R.id.steps_detail_container, stepDetailsFragment)
+                    .commit();
+
+            stepDetailsFragment.setStepId(mStep);
+        }
     }
 
     public void next_step(View v){
@@ -45,4 +55,9 @@ public class StepDetailsActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(ON_STEP_KEY, mStep);
+        super.onSaveInstanceState(outState);
+    }
 }

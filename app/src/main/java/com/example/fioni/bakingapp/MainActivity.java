@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,6 +21,9 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         RecipeFragment recipeFragment = new RecipeFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -52,12 +56,20 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intentSettings = new Intent(this, SettingsActivity.class);
-        /*Bundle b = new Bundle();
-        b.putParcelableArrayList("recipes", mRecipeArrayList);
-        intentSettings.putExtra("recipes", b);*/
-        intentSettings.putParcelableArrayListExtra("recipes",mRecipeArrayList);
-        startActivity(intentSettings);
+
+        int itemClicked = item.getItemId();
+        switch (itemClicked) {
+            case (R.id.recipes):
+                Intent intentRecipe = new Intent(this, MainActivity.class);
+                startActivity(intentRecipe);
+                break;
+            case (R.id.settings):
+                Intent intentSettings = new Intent(this, SettingsActivity.class);
+                intentSettings.putParcelableArrayListExtra("recipes", mRecipeArrayList);
+                startActivity(intentSettings);
+                break;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

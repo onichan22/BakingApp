@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +77,7 @@ public class StepDetailsFragment extends Fragment {
         mStep = aStep;
         mNextStep = Integer.parseInt(mStep.getId());
         mRecipeId = mStep.getR_id();
+        Log.i("recipeid", mStep.getR_id());
     }
 
     private void initializePlayer(Uri mediaUri) {
