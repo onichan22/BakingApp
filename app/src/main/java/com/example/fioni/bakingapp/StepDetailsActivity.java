@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.example.fioni.bakingapp.fragments.StepDetailsFragment;
@@ -25,7 +26,7 @@ public class StepDetailsActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mStep = savedInstanceState.getParcelable(ON_STEP_KEY);
-
+            Log.i("This step's id is ", mStep.getId());
             stepDetailsFragment.setStepId(mStep);
         }
 
