@@ -35,11 +35,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+
 /**
  * Created by fioni on 9/7/2017.
  */
 
 public class StepDetailsFragment extends Fragment {
+    private static final String STEP_ARRAY_KEY = "ARRAY STEP";
     public Step mStep;
     public int mNextStep;
     public String mRecipeId;
@@ -47,10 +49,20 @@ public class StepDetailsFragment extends Fragment {
     private SimpleExoPlayerView mPlayerView;
     public ArrayList<Step> mStepsArray;
     public TextView details_tv;
-
+    private static final String STEP_KEY = "THIS STEP";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        if (savedInstanceState != null) {
+            mStep = savedInstanceState.getParcelable(STEP_KEY);
+            mStepsArray = savedInstanceState.getParcelableArrayList(STEP_ARRAY_KEY);
+            setStepId(mStep);
+            //mRecipeId = mStep.getR_id();
+        } else if (savedInstanceState == null) {
+            URL recipeSearchUrl = NetworkUtils.buildUrl();
+            new QueryStepsTask().execute(recipeSearchUrl);
+        }
 
         View rootView = inflater.inflate(R.layout.step_details_list, container, false);
 
@@ -68,8 +80,7 @@ public class StepDetailsFragment extends Fragment {
             rootView.findViewById(R.id.next_step).setVisibility(View.INVISIBLE);
             rootView.findViewById(R.id.prev_step).setVisibility(View.INVISIBLE);
         }
-        URL recipeSearchUrl = NetworkUtils.buildUrl();
-        new QueryStepsTask().execute(recipeSearchUrl);
+
         return rootView;
     }
 
@@ -177,4 +188,14 @@ public class StepDetailsFragment extends Fragment {
                 mStepsArray = steps;
             }
         }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STEP_KEY, mStep);
+        outState.putParcelableArrayList(STEP_ARRAY_KEY, mStepsArray);
+        super.onSaveInstanceState(outState);
     }
+}
+
+
