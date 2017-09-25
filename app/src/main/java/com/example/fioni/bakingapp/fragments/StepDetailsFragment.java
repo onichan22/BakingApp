@@ -50,21 +50,53 @@ public class StepDetailsFragment extends Fragment {
     public ArrayList<Step> mStepsArray;
     public TextView details_tv;
     private static final String STEP_KEY = "THIS STEP";
+    private ClickToListen mCallback;
+    private TextView nextButton;
+    private TextView prevButton;
+    public Context mContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mContext = getContext();
+        View rootView = inflater.inflate(R.layout.step_details_list, container, false);
+        nextButton = (TextView) rootView.findViewById(R.id.next_step);
+        prevButton = (TextView) rootView.findViewById(R.id.prev_step);
 
         if (savedInstanceState != null) {
             mStep = savedInstanceState.getParcelable(STEP_KEY);
             mStepsArray = savedInstanceState.getParcelableArrayList(STEP_ARRAY_KEY);
             setStepId(mStep);
+            nextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCallback.handleClick(v, mStepsArray);
+                }
+            });
+
+            prevButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCallback.handleClick(v, mStepsArray);
+                }
+            });
             //mRecipeId = mStep.getR_id();
         } else if (savedInstanceState == null) {
             URL recipeSearchUrl = NetworkUtils.buildUrl();
             new QueryStepsTask().execute(recipeSearchUrl);
-        }
+            nextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCallback.handleClick(v, mStepsArray);
+                }
+            });
 
-        View rootView = inflater.inflate(R.layout.step_details_list, container, false);
+            prevButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCallback.handleClick(v, mStepsArray);
+                }
+            });
+        }
 
         details_tv = (TextView) rootView.findViewById(R.id.step_details_tv);
         if(mStep == null){
@@ -77,11 +109,25 @@ public class StepDetailsFragment extends Fragment {
         }
 
         if(!getResources().getBoolean(R.bool.small_screen)){
-            rootView.findViewById(R.id.next_step).setVisibility(View.INVISIBLE);
-            rootView.findViewById(R.id.prev_step).setVisibility(View.INVISIBLE);
+            nextButton.setVisibility(View.INVISIBLE);
+            prevButton.setVisibility(View.INVISIBLE);
         }
 
+
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+
+        try {
+            mCallback = (ClickToListen) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement ClickToListen");
+        }
     }
 
     public void setStepId(Step aStep) {
@@ -92,16 +138,15 @@ public class StepDetailsFragment extends Fragment {
     }
 
     private void initializePlayer(Uri mediaUri) {
-        if(mediaUri != null && mExoPlayer == null){
-            Context context = getContext();
+        if (mediaUri.toString() != "" && mExoPlayer == null) {
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(mContext, trackSelector, loadControl);
             mPlayerView.setPlayer(mExoPlayer);
 
-            String userAgent = Util.getUserAgent(context, "BakingApp");
+            String userAgent = Util.getUserAgent(mContext, "BakingApp");
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
-                    context, userAgent), new DefaultExtractorsFactory(), null, null);
+                    mContext, userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
         }
@@ -121,8 +166,9 @@ public class StepDetailsFragment extends Fragment {
         }
     }
 
-    public void nextStep() {
+    public void nextStep(ArrayList<Step> stepArray) {
         mNextStep = mNextStep + 1;
+        mStepsArray = stepArray;
         if(mExoPlayer != null)
         {
             releasePlayer();
@@ -137,9 +183,9 @@ public class StepDetailsFragment extends Fragment {
         details_tv.setText(mStepsArray.get(mNextStep).getDesc());
     }
 
-    public void prevStep() {
+    public void prevStep(ArrayList<Step> stepArray) {
         mNextStep = mNextStep - 1;
-
+        mStepsArray = stepArray;
         if (mNextStep < 0){
             mNextStep = 0;
             Toast.makeText(getContext(), "Reached beginning of steps", Toast.LENGTH_SHORT).show();
@@ -192,10 +238,20 @@ public class StepDetailsFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        mStep.setId(mStepsArray.get(mNextStep).getId());
+        mStep.setDesc(mStepsArray.get(mNextStep).getDesc());
+        mStep.setShort_desc(mStepsArray.get(mNextStep).getShort_desc());
+        mStep.setThumb_url(mStepsArray.get(mNextStep).getThumb_url());
+        mStep.setVideo_url(mStepsArray.get(mNextStep).getVideo_url());
         outState.putParcelable(STEP_KEY, mStep);
         outState.putParcelableArrayList(STEP_ARRAY_KEY, mStepsArray);
         super.onSaveInstanceState(outState);
     }
+
+    public interface ClickToListen {
+        void handleClick(View v, ArrayList<Step> stepArray);
+    }
+
 }
 
 
