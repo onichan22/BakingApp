@@ -104,8 +104,11 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
         }
         if (mTwoPane){
             mStep = step;
+            findViewById(R.id.prev_step).setVisibility(View.INVISIBLE);
+            findViewById(R.id.next_step).setVisibility(View.INVISIBLE);
             StepDetailsFragment newStepDetailsFragment = new StepDetailsFragment();
-            newStepDetailsFragment.setStepId(mStep);
+            newStepDetailsFragment.setRecipeId(mStep.getR_id());
+            newStepDetailsFragment.setStepId(Integer.parseInt(mStep.getId()));
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.steps_detail_container, newStepDetailsFragment)

@@ -9,55 +9,73 @@ import android.view.View;
 import com.example.fioni.bakingapp.fragments.StepDetailsFragment;
 import com.example.fioni.bakingapp.utilities.Step;
 
-import java.util.ArrayList;
-
 /**
  * Created by fioni on 9/9/2017.
  */
 
-public class StepDetailsActivity extends AppCompatActivity implements StepDetailsFragment.ClickToListen {
+public class StepDetailsActivity extends AppCompatActivity {
     Step mStep;
-    StepDetailsFragment stepDetailsFragment = new StepDetailsFragment();
-    FragmentManager fragmentManager = getSupportFragmentManager();
+    int mOnStep;
+
     public static String ON_STEP_KEY = "ON STEP";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent recipeIntent = getIntent();
+        mStep = recipeIntent.getParcelableExtra("thisStep");
 
         setContentView(R.layout.activity_steps_detail);
-        if (savedInstanceState == null) {
-            Intent recipeIntent = getIntent();
-            mStep = recipeIntent.getParcelableExtra("thisStep");
 
+        final View nextButton = findViewById(R.id.next_step);
+        final View prevButton = findViewById(R.id.prev_step);
+
+        View.OnClickListener clickNext = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StepDetailsFragment newStepDetailsFragment = new StepDetailsFragment();
+                newStepDetailsFragment.setRecipeId(mStep.getR_id());
+                if (v == nextButton) {
+                    mOnStep = mOnStep + 1;
+                    newStepDetailsFragment.setStepId(mOnStep);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.steps_detail_container, newStepDetailsFragment)
+                            .commit();
+                }
+                if (v == prevButton) {
+                    mOnStep = mOnStep - 1;
+                    newStepDetailsFragment.setStepId(mOnStep);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.steps_detail_container, newStepDetailsFragment)
+                            .commit();
+                }
+            }
+        };
+
+        nextButton.setOnClickListener(clickNext);
+        prevButton.setOnClickListener(clickNext);
+
+        if (savedInstanceState == null) {
+
+            mOnStep = Integer.parseInt(mStep.getId());
+            StepDetailsFragment stepDetailsFragment = new StepDetailsFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            stepDetailsFragment.setRecipeId(mStep.getR_id());
+            stepDetailsFragment.setStepId(mOnStep);
 
             fragmentManager.beginTransaction()
                     .add(R.id.steps_detail_container, stepDetailsFragment)
                     .commit();
-
-            stepDetailsFragment.setStepId(mStep);
+        }
+        if (savedInstanceState != null) {
+            mOnStep = savedInstanceState.getInt(ON_STEP_KEY);
         }
     }
 
-    public void handleClick(View v, ArrayList<Step> stepArray) {
-        if (v.getId() == R.id.next_step) {
-            stepDetailsFragment.nextStep(stepArray);
-        }
-        if (v.getId() == R.id.prev_step) {
-            stepDetailsFragment.prevStep(stepArray);
-        }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(ON_STEP_KEY, mOnStep);
+        super.onSaveInstanceState(outState);
     }
-
-   /* public void next_step(View v){
-        //Toast.makeText(this, "next button clicked", Toast.LENGTH_SHORT).show();
-        stepDetailsFragment.nextStep();
-
-    }
-
-    public void prev_step(View v){
-        //Toast.makeText(this, "next button clicked", Toast.LENGTH_SHORT).show();
-        stepDetailsFragment.prevStep();
-
-    }*/
-
 }
