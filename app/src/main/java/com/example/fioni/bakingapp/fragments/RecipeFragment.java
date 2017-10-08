@@ -26,26 +26,25 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by fioni on 9/17/2017.
  */
 
 public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdapterOnClickHandler {
 
-    private View mView;
-    private RecyclerView mRecyclerView;
-    private RecipeAdapter mRecipeAdapter;
-    private ArrayList<Recipe> mRecipeList;
+    public
+    @BindView(R.id.recyclerview)
+    RecyclerView mRecyclerView;
     OnObjectClickListener mCallback;
     GiveRecipeList mCallback_rec;
-
-    public interface OnObjectClickListener {
-        void onSelectedObj(Recipe recipe);
-    }
-
-    public interface GiveRecipeList {
-        void recipeList(ArrayList<Recipe> recipe);
-    }
+    private View mView;
+    private RecipeAdapter mRecipeAdapter;
+    private ArrayList<Recipe> mRecipeList;
+    private Unbinder unbinder;
 
     public RecipeFragment() {
 
@@ -83,12 +82,13 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
 
         mView = inflater.inflate(R.layout.recycler_view, container, false);
 
-        mRecyclerView = (RecyclerView) mView.findViewById(R.id.recyclerview);
+        ButterKnife.bind(this, mView);
+        unbinder = ButterKnife.bind(this, mView);
 
         if (getResources().getBoolean(R.bool.small_screen)) {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
-        if (!getResources().getBoolean(R.bool.small_screen)) {
+        if (getResources().getBoolean(R.bool.horizontal)) {
             mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         }
 
@@ -114,6 +114,20 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
     @Override
     public void onClick(Step aStep) {
         //do nothing
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    public interface OnObjectClickListener {
+        void onSelectedObj(Recipe recipe);
+    }
+
+    public interface GiveRecipeList {
+        void recipeList(ArrayList<Recipe> recipe);
     }
 
     public class QueryTask extends AsyncTask<URL, Void, ArrayList<Recipe>> {
@@ -146,6 +160,8 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
                 mCallback_rec.recipeList(recipeDataResults);
             }
         }
+
+
     }
 
     //public ArrayList<Recipe> getRecipeList(){

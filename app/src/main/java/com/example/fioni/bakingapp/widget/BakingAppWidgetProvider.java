@@ -40,6 +40,13 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
+    public static void selectRecipeToDisplay(SettingsActivity settingsActivity) {
+
+        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.setComponent(new ComponentName(settingsActivity, BakingAppWidgetProvider.class));
+        settingsActivity.sendBroadcast(intent);
+    }
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
@@ -48,8 +55,6 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId, intentWidget);
         }
-
-
     }
 
     @Override
@@ -60,13 +65,6 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
-    }
-
-    public static void selectRecipeToDisplay(SettingsActivity settingsActivity) {
-
-        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        intent.setComponent(new ComponentName(settingsActivity, BakingAppWidgetProvider.class));
-        settingsActivity.sendBroadcast(intent);
     }
 }
 

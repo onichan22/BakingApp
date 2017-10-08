@@ -23,10 +23,10 @@ import java.util.ArrayList;
 public class SettingsActivity extends AppCompatActivity implements SettingsAdapter.SettingsAdapterOnClickHandler {
 
     public static final String SELECTED_RECIPE = "selected recipe";
+    public int mRecipeId;
     private RecyclerView mRecyclerView;
     private ArrayList<Recipe> mRecipes;
     private ArrayList<Ingredients> mIngredients;
-    public int mRecipeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsAdapt
 
     public void saveSettings(View v){
         //TODO: service for widget
-
         BakingAppWidgetProvider.selectRecipeToDisplay(this);
     }
 

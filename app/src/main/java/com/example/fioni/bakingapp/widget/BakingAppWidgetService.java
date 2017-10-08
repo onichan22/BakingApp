@@ -34,6 +34,7 @@ public class BakingAppWidgetService extends IntentService {
     }
 
     private void handleActionSelectRecipe() {
+        startActionSelectRecipe(getApplicationContext());
 
     }
 }

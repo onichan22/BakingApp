@@ -26,6 +26,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by fioni on 9/15/2017.
  */
@@ -33,9 +37,12 @@ import java.util.ArrayList;
 public class IngredientsFragment extends Fragment implements RecipeAdapter.RecipeAdapterOnClickHandler{
 
     public int mRecipeId;
+    public
+    @BindView(R.id.recyclerview)
+    RecyclerView mRecyclerView;
     private View mView;
     private RecipeAdapter mRecipeAdapter;
-    private RecyclerView mRecyclerView;
+    private Unbinder unbinder;
 
     public IngredientsFragment(){
 
@@ -57,7 +64,8 @@ public class IngredientsFragment extends Fragment implements RecipeAdapter.Recip
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.recycler_view, container, false);
 
-        mRecyclerView = (RecyclerView) mView.findViewById(R.id.recyclerview);
+        ButterKnife.bind(this, mView);
+        unbinder = ButterKnife.bind(this, mView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mRecipeAdapter = new RecipeAdapter(this);
@@ -79,6 +87,16 @@ public class IngredientsFragment extends Fragment implements RecipeAdapter.Recip
     @Override
     public void onClick(Step aStep) {
         //do nothing
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    public void setRecipeId(String recipeId) {
+        mRecipeId = Integer.parseInt(recipeId) - 1;
     }
 
     public class QueryIngredientsTask extends AsyncTask<URL, Void, ArrayList<Ingredients>> {
@@ -110,10 +128,6 @@ public class IngredientsFragment extends Fragment implements RecipeAdapter.Recip
                 mRecipeAdapter.setIngredientsData(recipeDataResults);
             }
         }
-    }
-
-    public void setRecipeId (String recipeId){
-        mRecipeId = Integer.parseInt(recipeId)-1;
     }
 
 }

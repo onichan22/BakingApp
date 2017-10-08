@@ -42,19 +42,19 @@ import java.util.ArrayList;
 
 public class StepDetailsFragment extends Fragment {
     private static final String STEP_ARRAY_KEY = "ARRAY STEP";
+    private static final String STEP_KEY = "THIS STEP";
     public Step mStep;
     public int mNextStep;
     public String mRecipeId;
+    public ArrayList<Step> mStepsArray;
+    public TextView details_tv;
+    public Context mContext;
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
     private ImageView mImageView;
-    public ArrayList<Step> mStepsArray;
-    public TextView details_tv;
-    private static final String STEP_KEY = "THIS STEP";
     // private ClickToListen mCallback;
     private TextView nextButton;
     private TextView prevButton;
-    public Context mContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -101,6 +101,7 @@ public class StepDetailsFragment extends Fragment {
                     Picasso.with(getContext()).load(mStep.getThumb_url()).into(mImageView);
                 } else if (mStep.getVideo_url().isEmpty() && (mStep.getThumb_url().isEmpty())) {
                     mImageView.setVisibility(View.VISIBLE);
+                    mPlayerView.setVisibility(View.INVISIBLE);
                     mImageView.setImageResource(R.drawable.cupcake);
                 }
             }
@@ -149,6 +150,13 @@ public class StepDetailsFragment extends Fragment {
         mRecipeId = r_id;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STEP_KEY, mStep);
+        outState.putParcelableArrayList(STEP_ARRAY_KEY, mStepsArray);
+        super.onSaveInstanceState(outState);
+    }
+
     public class QueryStepsTask extends AsyncTask<URL, Void, ArrayList<Step>> {
 
         @Override
@@ -195,14 +203,6 @@ public class StepDetailsFragment extends Fragment {
             }
         }
         }
-
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STEP_KEY, mStep);
-        outState.putParcelableArrayList(STEP_ARRAY_KEY, mStepsArray);
-        super.onSaveInstanceState(outState);
-    }
 
 
 }

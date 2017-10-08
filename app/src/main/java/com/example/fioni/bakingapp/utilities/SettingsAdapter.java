@@ -18,32 +18,6 @@ import java.util.ArrayList;
 public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.SettingsAdapterViewHolder>{
     public int mSelectedItem = -1;
     public ArrayList<Recipe> mRecipe;
-    SettingsAdapterOnClickHandler handler;
-
-    public interface SettingsAdapterOnClickHandler {
-
-        void onClick(Recipe aRecipe);
-    }
-
-    public class SettingsAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        public RadioButton mRadio;
-        public TextView mText;
-
-        public SettingsAdapterViewHolder(View itemView) {
-            super(itemView);
-            mText = (TextView) itemView.findViewById(R.id.set_recipe_tv);
-            mRadio = (RadioButton) itemView.findViewById(R.id.radio_button);
-            itemView.setOnClickListener(this);
-            //this.itemView.setOnClickListener(clickListener);
-            //mRadio.setOnClickListener(clickListener);
-        }
-
-        @Override
-        public void onClick(View v) {
-            handler.onClick(mRecipe.get(mSelectedItem));
-        }
-    }
 
     @Override
     public SettingsAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -66,5 +40,39 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Settin
     public void setAdapterData(ArrayList<Recipe> recipeData) {
         mRecipe = recipeData;
         notifyDataSetChanged();
+    }
+
+    public interface SettingsAdapterOnClickHandler {
+
+        void onClick(Recipe aRecipe);
+    }
+
+    public class SettingsAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        public RadioButton mRadio;
+        public TextView mText;
+
+        public SettingsAdapterViewHolder(View itemView) {
+            super(itemView);
+            mText = (TextView) itemView.findViewById(R.id.set_recipe_tv);
+            mRadio = (RadioButton) itemView.findViewById(R.id.radio_button);
+
+            itemView.setOnClickListener(this);
+            //this.itemView.setOnClickListener(clickListener);
+            mRadio.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mSelectedItem = getAdapterPosition();
+            SettingsAdapterOnClickHandler handler = new SettingsAdapterOnClickHandler() {
+                @Override
+                public void onClick(Recipe aRecipe) {
+                    onClick(mRecipe.get(mSelectedItem));
+                }
+            };
+            //handler.onClick(mRecipe.get(mSelectedItem));
+            notifyItemRangeChanged(0, mRecipe.size());
+        }
     }
 }

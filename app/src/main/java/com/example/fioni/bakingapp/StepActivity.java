@@ -42,7 +42,7 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
         setSupportActionBar(myToolbar);
 
         Intent recipeIntent = getIntent();
-        mRecipe =   recipeIntent.getParcelableExtra("thisRecipe");
+        mRecipe = recipeIntent.getParcelableExtra("thisRecipe");
 
         setTitle(mRecipe.getName());
 
@@ -104,8 +104,8 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
         }
         if (mTwoPane){
             mStep = step;
-            findViewById(R.id.prev_step).setVisibility(View.INVISIBLE);
-            findViewById(R.id.next_step).setVisibility(View.INVISIBLE);
+            //findViewById(R.id.prev_step).setVisibility(View.INVISIBLE);
+            //findViewById(R.id.next_step).setVisibility(View.INVISIBLE);
             StepDetailsFragment newStepDetailsFragment = new StepDetailsFragment();
             newStepDetailsFragment.setRecipeId(mStep.getR_id());
             newStepDetailsFragment.setStepId(Integer.parseInt(mStep.getId()));
@@ -154,4 +154,6 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
     public void recipeList(ArrayList<Recipe> recipe) {
         mRecipeArrayList = recipe;
     }
+
+
 }

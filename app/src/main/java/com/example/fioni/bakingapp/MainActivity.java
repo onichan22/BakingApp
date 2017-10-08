@@ -25,12 +25,14 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        RecipeFragment recipeFragment = new RecipeFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (savedInstanceState == null) {
+            RecipeFragment recipeFragment = new RecipeFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
 
-        fragmentManager.beginTransaction()
-                .add(R.id.recipe_container, recipeFragment)
-                .commit();
+            fragmentManager.beginTransaction()
+                    .add(R.id.recipe_container, recipeFragment)
+                    .commit();
+        }
 
     }
 
@@ -40,6 +42,11 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
         final Intent intent = new Intent(this, StepActivity.class);
         intent.putExtra("thisRecipe", recipe);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
