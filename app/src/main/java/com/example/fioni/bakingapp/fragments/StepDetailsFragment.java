@@ -2,7 +2,6 @@ package com.example.fioni.bakingapp.fragments;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.fioni.bakingapp.R;
-import com.example.fioni.bakingapp.utilities.BakingJSonUtil;
-import com.example.fioni.bakingapp.utilities.NetworkUtils;
+import com.example.fioni.bakingapp.utilities.Global;
 import com.example.fioni.bakingapp.utilities.Step;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -29,10 +28,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -43,6 +38,7 @@ import java.util.ArrayList;
 public class StepDetailsFragment extends Fragment {
     private static final String STEP_ARRAY_KEY = "ARRAY STEP";
     private static final String STEP_KEY = "THIS STEP";
+    private static final String PLAYER_POSITION = "PLAYER POSITION";
     public Step mStep;
     public int mNextStep;
     public String mRecipeId;
@@ -52,9 +48,10 @@ public class StepDetailsFragment extends Fragment {
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
     private ImageView mImageView;
+    private long mPosition;
+    private ArrayList<Step> mStepSet = new ArrayList<Step>();
+
     // private ClickToListen mCallback;
-    private TextView nextButton;
-    private TextView prevButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,14 +65,45 @@ public class StepDetailsFragment extends Fragment {
 
         if (savedInstanceState != null) {
             mStep = savedInstanceState.getParcelable(STEP_KEY);
-            mStepsArray = savedInstanceState.getParcelableArrayList(STEP_ARRAY_KEY);
+            //mStepSet = savedInstanceState.getParcelableArrayList(STEP_ARRAY_KEY);
+            mPosition = savedInstanceState.getLong(PLAYER_POSITION, C.TIME_UNSET);
             setStepId(Integer.parseInt(mStep.getId()));
+            if (mPosition != C.TIME_UNSET) mExoPlayer.seekTo(mPosition);
             setupViews();
 
             //mRecipeId = mStep.getR_id();
         } else if (savedInstanceState == null) {
-            URL recipeSearchUrl = NetworkUtils.buildUrl();
-            new QueryStepsTask().execute(recipeSearchUrl);
+            for (int i = 0; i < Global.steps.size(); i++) {
+                if (Global.steps.get(i).getR_id().equals(String.valueOf(Global.recipeId - 1))) {
+                    mStepSet.add(new Step(Global.steps.get(i).getR_id(),
+                            Global.steps.get(i).getId(),
+                            Global.steps.get(i).getShort_desc(),
+                            Global.steps.get(i).getDesc(),
+                            Global.steps.get(i).getVideo_url(),
+                            Global.steps.get(i).getThumb_url())
+                    );
+                }
+            }
+
+            if (mNextStep >= 0 && mNextStep < mStepSet.size()) {
+                if (mNextStep < 0) {
+                    mNextStep = 0;
+                }
+                if (mNextStep > mStepSet.size()) {
+                    mNextStep = mStepSet.size();
+                }
+                mStep = new Step(
+                        mStepSet.get(mNextStep).getR_id(),
+                        mStepSet.get(mNextStep).getId(),
+                        mStepSet.get(mNextStep).getShort_desc(),
+                        mStepSet.get(mNextStep).getDesc(),
+                        mStepSet.get(mNextStep).getVideo_url(),
+                        mStepSet.get(mNextStep).getThumb_url()
+                );
+
+                Global.stepSetSize = mStepSet.size();
+                setupViews();
+            }
 
         }
 
@@ -83,8 +111,8 @@ public class StepDetailsFragment extends Fragment {
     }
 
     public void setupViews() {
-        if (mNextStep > mStepsArray.size()) {
-            mNextStep = mStepsArray.size();
+        if (mNextStep > mStepSet.size()) {
+            mNextStep = mStepSet.size();
         } else if (mNextStep < 0) {
             mNextStep = 0;
         } else {
@@ -133,6 +161,7 @@ public class StepDetailsFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if(mExoPlayer != null){
+            mPosition = mExoPlayer.getCurrentPosition();
             releasePlayer();
         }
     }
@@ -154,56 +183,9 @@ public class StepDetailsFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STEP_KEY, mStep);
         outState.putParcelableArrayList(STEP_ARRAY_KEY, mStepsArray);
+        outState.putLong(PLAYER_POSITION, mPosition);
         super.onSaveInstanceState(outState);
     }
-
-    public class QueryStepsTask extends AsyncTask<URL, Void, ArrayList<Step>> {
-
-        @Override
-        protected ArrayList<Step> doInBackground(URL... params) {
-            URL searchUrl = params[0];
-            String recipeSearchResults;
-            ArrayList<Step> StepArrayList;
-            try {
-                recipeSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-                StepArrayList = BakingJSonUtil.getStepsFromJson(getActivity(), recipeSearchResults, Integer.parseInt(mRecipeId));
-
-                return StepArrayList;
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Step> steps) {
-            mStepsArray = steps;
-            if (mNextStep >= 0 && mNextStep < mStepsArray.size()) {
-                if (mNextStep < 0) {
-                    mNextStep = 0;
-                }
-                if (mNextStep > mStepsArray.size()) {
-                    mNextStep = mStepsArray.size();
-                }
-                mStep = new Step(
-                        mStepsArray.get(mNextStep).getR_id(),
-                        mStepsArray.get(mNextStep).getId(),
-                        mStepsArray.get(mNextStep).getShort_desc(),
-                        mStepsArray.get(mNextStep).getDesc(),
-                        mStepsArray.get(mNextStep).getVideo_url(),
-                        mStepsArray.get(mNextStep).getThumb_url()
-                );
-
-                setupViews();
-            }
-        }
-        }
-
 
 }
 

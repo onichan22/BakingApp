@@ -16,6 +16,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by fioni on 9/17/2017.
@@ -25,8 +26,8 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
 
     public static final String SELECTED_RECIPE = "selected recipe";
     public static final int DEFAULT_RECIPE = 1;
-    ArrayList<Ingredients> ingredientsArrayList;
     public int aRecipeId;
+    List<Ingredients> ingredientsArrayList = new ArrayList<>();
     private Context mContext;
 
     public BakingAppRemoteViewsFactory(Context applicationContext, Intent intent) {
@@ -35,9 +36,9 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
 
     @Override
     public void onCreate() {
-        aRecipeId = DEFAULT_RECIPE;
-        URL recipeSearchUrl = NetworkUtils.buildUrl();
-        new QueryIngredientsTask().execute(recipeSearchUrl);
+        //aRecipeId = DEFAULT_RECIPE;
+        //URL recipeSearchUrl = NetworkUtils.buildUrl();
+        //new QueryAllIngredientsTask().execute(recipeSearchUrl);
 
 
     }
@@ -56,13 +57,8 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
 
     @Override
     public int getCount() {
-        int count = 0;
-        if (null == ingredientsArrayList) {
-            return 0;
-        } else {
-            count = ingredientsArrayList.size();
-        }
-        return count;
+        //int count = 0;
+        return ingredientsArrayList.size();
     }
 
     @Override
@@ -73,7 +69,12 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
         rv.setTextViewText(R.id.measure_tv, ingredientsArrayList.get(position).getMeasure());
         rv.setTextViewText(R.id.ingr_name_tv, ingredientsArrayList.get(position).getIngr_name());
 
+        //Intent intent = new Intent(mContext, MainActivity.class);
+        //PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+        //rv.setOnClickPendingIntent(R.id.appwidget_container, pendingIntent);
+
         return rv;
+        //TODO 002 pending intent to open the application
         //return null;
     }
 
@@ -124,6 +125,7 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
         protected void onPostExecute(ArrayList<Ingredients> recipeDataResults) {
             if (recipeDataResults != null) {
                 ingredientsArrayList = recipeDataResults;
+                onDataSetChanged();
             }
         }
     }

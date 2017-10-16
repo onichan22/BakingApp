@@ -36,7 +36,7 @@
 
         <service
             android:name=".widget.BakingAppRemoteViewsService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <receiver android:name=".widget.BakingAppWidgetProvider">
             <intent-filter>
@@ -47,6 +47,12 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/baking_app_widget_provider_info" />
         </receiver>
+
+        <provider
+            android:name=".data.BakingContentProvider"
+            android:authorities="com.example.fioni.bakingapp.provider"
+            android:enabled="true"
+            android:exported="false"></provider>
     </application>
 
 </manifest>

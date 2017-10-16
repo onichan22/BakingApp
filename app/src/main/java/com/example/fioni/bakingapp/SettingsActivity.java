@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.fioni.bakingapp.utilities.Ingredients;
 import com.example.fioni.bakingapp.utilities.Recipe;
@@ -33,14 +34,17 @@ public class SettingsActivity extends AppCompatActivity implements SettingsAdapt
         super.onCreate(savedInstanceState);
         Intent recipeIntent = getIntent();
         //mRecipes = recipeIntent.getBundleExtra("recipes").getParcelableArrayList("recipes");
-        mRecipes = recipeIntent.getParcelableArrayListExtra("recipes");
-        setContentView(R.layout.activity_settings);
-        mRecyclerView = (RecyclerView) findViewById(R.id.settings_rv);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        SettingsAdapter adapter = new SettingsAdapter();
-        mRecyclerView.setAdapter(adapter);
-        adapter.setAdapterData(mRecipes);
-
+        if (recipeIntent.getParcelableArrayListExtra("recipes") == null) {
+            Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show();
+        } else {
+            mRecipes = recipeIntent.getParcelableArrayListExtra("recipes");
+            setContentView(R.layout.activity_settings);
+            mRecyclerView = (RecyclerView) findViewById(R.id.settings_rv);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            SettingsAdapter adapter = new SettingsAdapter();
+            mRecyclerView.setAdapter(adapter);
+            adapter.setAdapterData(mRecipes);
+        }
     }
 
     public void saveSettings(View v){
@@ -53,7 +57,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsAdapt
     public void onClick(Recipe aRecipe) {
         mRecipeId = Integer.parseInt(aRecipe.getId());
         //URL recipeSearchUrl = NetworkUtils.buildUrl();
-        //new QueryIngredientsTask().execute(recipeSearchUrl);
+        //new QueryAllIngredientsTask().execute(recipeSearchUrl);
 
         SharedPreferences preferredRecipe = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferredRecipe.edit();

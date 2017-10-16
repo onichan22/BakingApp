@@ -1,9 +1,7 @@
 package com.example.fioni.bakingapp.fragments;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -16,16 +14,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.fioni.bakingapp.R;
-import com.example.fioni.bakingapp.utilities.BakingJSonUtil;
-import com.example.fioni.bakingapp.utilities.NetworkUtils;
+import com.example.fioni.bakingapp.data.BakingContract;
 import com.example.fioni.bakingapp.utilities.Recipe;
 import com.example.fioni.bakingapp.utilities.RecipeAdapter;
 import com.example.fioni.bakingapp.utilities.Step;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -48,16 +41,10 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
     private Parcelable mListState;
     private LinearLayoutManager mLayoutManager;
     private Unbinder unbinder;
+    private ArrayList<Step> mStepSet = new ArrayList<Step>();
 
     public  StepsFragment(){
 
-    }
-
-    public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     @Override
@@ -91,14 +78,39 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mRecipeAdapter = new RecipeAdapter(this);
+
+        Cursor mCursor = getActivity().getContentResolver().query(
+                BakingContract.Steps.CONTENT_URI,
+                null,
+                null,
+                null,
+                null);
+
+        try {
+            while (mCursor.moveToNext()) {
+
+                // The Cursor is now set to the right position
+                mStepSet.add(new Step(mCursor.getString(1),
+                        mCursor.getString(2),
+                        mCursor.getString(3),
+                        mCursor.getString(4),
+                        mCursor.getString(5),
+                        mCursor.getString(6)));
+            }
+        } finally {
+            mCursor.close();
+        }
+
+        mRecipeAdapter.setStepData(mStepSet);
         mRecyclerView.setAdapter(mRecipeAdapter);
 
+/*
         if (isOnline()) {
             URL recipeSearchUrl = NetworkUtils.buildUrl();
             new QueryTask().execute(recipeSearchUrl);
             //Toast.makeText(getContext(), "Test", Toast.LENGTH_LONG);
         }
-
+*/
         return mView;
     }
 
@@ -113,9 +125,9 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
         mCallback.onSelectedStep(aStep);
     }
 
-    public void setRecipeId(String recipeId) {
+/*    public void setRecipeId(String recipeId) {
         mRecipeId = Integer.parseInt(recipeId) - 1;
-    }
+    }*/
 
     @Override
     public void onSaveInstanceState(Bundle state) {
@@ -153,34 +165,4 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
         void onSelectedStep(Step step);
     }
 
-    public class QueryTask extends AsyncTask<URL, Void, ArrayList<Step>> {
-
-        @Override
-        protected ArrayList<Step> doInBackground(URL... params) {
-            URL searchUrl = params[0];
-            String recipeSearchResults = null;
-            try {
-                recipeSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-
-                ArrayList<Step> steps = BakingJSonUtil.getStepsFromJson(getActivity(), recipeSearchResults, mRecipeId);
-
-                return steps;
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Step> recipeDataResults) {
-            if (recipeDataResults != null) {
-                mRecipeAdapter.setStepData(recipeDataResults);
-            }
-        }
-    }
 }

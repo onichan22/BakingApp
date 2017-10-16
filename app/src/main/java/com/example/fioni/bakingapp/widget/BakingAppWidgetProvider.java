@@ -1,6 +1,5 @@
 package com.example.fioni.bakingapp.widget;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -8,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.example.fioni.bakingapp.MainActivity;
 import com.example.fioni.bakingapp.R;
 import com.example.fioni.bakingapp.SettingsActivity;
 
@@ -28,12 +26,14 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);*/
 
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        // Construct the RemoteViews object
+        //Intent intent = new Intent(context, BakingAppRemoteViewsService.class).putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+
+        //Intent intent = new Intent(context, MainActivity.class);
+        //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget_provider);
         // Widgets allow click handlers to only launch pending intents
-        views.setOnClickPendingIntent(R.id.appwidget_container, pendingIntent);
+        //views.setOnClickPendingIntent(R.id.appwidget_container, pendingIntent);
 
         views.setRemoteAdapter(R.id.widgetListView, intentWidget);
         // Instruct the widget manager to update the widget

@@ -109,4 +109,63 @@ public final class BakingJSonUtil {
 
         return newStep;
     }
+
+    public static ArrayList<Ingredients> getAllIngredientsFromJson(Context context, String bakingStr)
+            throws JSONException {
+
+        final String RECIPE_ID = "id";
+        final String ING_QUANTITY = "quantity";
+        final String ING_MSR = "measure";
+        final String ING_NAME = "ingredient";
+        final String ING_TITLE = "ingredients";
+
+        JSONArray recipesArray = new JSONArray(bakingStr);
+        int recipesArraySize = recipesArray.length();
+        ArrayList<Ingredients> allIngredients = new ArrayList<Ingredients>();
+
+        for (int i = 0; i < recipesArraySize; i++) {
+            JSONArray ingredientsArray = recipesArray.getJSONObject(i).getJSONArray(ING_TITLE);
+            for (int n = 0; n < ingredientsArray.length(); n++) {
+                JSONObject aIngredient = ingredientsArray.getJSONObject(n);
+                allIngredients.add(new Ingredients(String.valueOf(i), aIngredient.getString(ING_QUANTITY),
+                        aIngredient.getString(ING_MSR), aIngredient.getString(ING_NAME)));
+
+            }
+        }
+
+        return allIngredients;
+
+    }
+
+    public static ArrayList<Step> getAllStepsFromJson(Context context, String bakingStr)
+            throws JSONException {
+
+        final String STEP_OBJ = "steps";
+        final String STEP_ID = "id";
+        final String STEP_SDESC = "shortDescription";
+        final String STEP_DESC = "description";
+        final String STEP_VIDEO = "videoURL";
+        final String STEP_THUMB = "thumbnailURL";
+
+        JSONArray recipesArray = new JSONArray(bakingStr);
+        int recipesArraySize = recipesArray.length();
+        ArrayList<Step> allSteps = new ArrayList<Step>();
+
+        for (int i = 0; i < recipesArraySize; i++) {
+            JSONArray stepsArray = recipesArray.getJSONObject(i).getJSONArray(STEP_OBJ);
+            for (int n = 0; n < stepsArray.length(); n++) {
+                JSONObject aStep = stepsArray.getJSONObject(n);
+                allSteps.add(new Step(
+                        Integer.toString(i),
+                        aStep.getString(STEP_ID),
+                        aStep.getString(STEP_SDESC),
+                        aStep.getString(STEP_DESC),
+                        aStep.getString(STEP_VIDEO),
+                        aStep.getString(STEP_THUMB)));
+
+            }
+        }
+
+        return allSteps;
+    }
 }

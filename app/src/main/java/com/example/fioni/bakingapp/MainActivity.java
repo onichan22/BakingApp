@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.fioni.bakingapp.fragments.RecipeFragment;
+import com.example.fioni.bakingapp.utilities.Global;
 import com.example.fioni.bakingapp.utilities.Recipe;
 
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
                 break;
             case (R.id.settings):
                 Intent intentSettings = new Intent(this, SettingsActivity.class);
-                intentSettings.putParcelableArrayListExtra("recipes", mRecipeArrayList);
+                intentSettings.putParcelableArrayListExtra("recipes", Global.recipes);
                 startActivity(intentSettings);
                 break;
         }

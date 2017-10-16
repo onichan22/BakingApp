@@ -1,9 +1,7 @@
 package com.example.fioni.bakingapp.fragments;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,17 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fioni.bakingapp.R;
-import com.example.fioni.bakingapp.utilities.BakingJSonUtil;
+import com.example.fioni.bakingapp.data.BakingContract;
 import com.example.fioni.bakingapp.utilities.Ingredients;
-import com.example.fioni.bakingapp.utilities.NetworkUtils;
 import com.example.fioni.bakingapp.utilities.Recipe;
 import com.example.fioni.bakingapp.utilities.RecipeAdapter;
 import com.example.fioni.bakingapp.utilities.Step;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -43,16 +36,10 @@ public class IngredientsFragment extends Fragment implements RecipeAdapter.Recip
     private View mView;
     private RecipeAdapter mRecipeAdapter;
     private Unbinder unbinder;
+    private ArrayList<Ingredients> mIngredientSet = new ArrayList<Ingredients>();
 
     public IngredientsFragment(){
 
-    }
-
-    public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     @Override
@@ -71,11 +58,28 @@ public class IngredientsFragment extends Fragment implements RecipeAdapter.Recip
         mRecipeAdapter = new RecipeAdapter(this);
         mRecyclerView.setAdapter(mRecipeAdapter);
 
-        if (isOnline()) {
-            URL recipeSearchUrl = NetworkUtils.buildUrl();
-            new IngredientsFragment.QueryIngredientsTask().execute(recipeSearchUrl);
-            //Toast.makeText(getContext(), "Test", Toast.LENGTH_LONG);
+        Cursor mCursor = getActivity().getContentResolver().query(
+                BakingContract.Ingredients.CONTENT_URI,
+                null,
+                null,
+                null,
+                null);
+
+        try {
+            while (mCursor.moveToNext()) {
+
+                // The Cursor is now set to the right position
+                mIngredientSet.add(new Ingredients(mCursor.getString(1),
+                        mCursor.getString(2),
+                        mCursor.getString(3),
+                        mCursor.getString(4)));
+            }
+        } finally {
+            mCursor.close();
         }
+
+        mRecipeAdapter.setIngredientsData(mIngredientSet);
+
         return mView;
     }
 
@@ -97,37 +101,6 @@ public class IngredientsFragment extends Fragment implements RecipeAdapter.Recip
 
     public void setRecipeId(String recipeId) {
         mRecipeId = Integer.parseInt(recipeId) - 1;
-    }
-
-    public class QueryIngredientsTask extends AsyncTask<URL, Void, ArrayList<Ingredients>> {
-
-        @Override
-        protected ArrayList<Ingredients> doInBackground(URL... params) {
-            URL searchUrl = params[0];
-            String recipeSearchResults = null;
-            try {
-                recipeSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-
-                ArrayList<Ingredients> ingredients = BakingJSonUtil.getIngredientsFromJson(getActivity(), recipeSearchResults, mRecipeId);
-
-                return ingredients;
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Ingredients> recipeDataResults) {
-            if (recipeDataResults != null) {
-                mRecipeAdapter.setIngredientsData(recipeDataResults);
-            }
-        }
     }
 
 }

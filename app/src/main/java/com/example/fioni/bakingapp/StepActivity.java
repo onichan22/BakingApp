@@ -14,6 +14,7 @@ import com.example.fioni.bakingapp.fragments.IngredientsFragment;
 import com.example.fioni.bakingapp.fragments.RecipeFragment;
 import com.example.fioni.bakingapp.fragments.StepDetailsFragment;
 import com.example.fioni.bakingapp.fragments.StepsFragment;
+import com.example.fioni.bakingapp.utilities.Global;
 import com.example.fioni.bakingapp.utilities.Recipe;
 import com.example.fioni.bakingapp.utilities.Step;
 
@@ -43,28 +44,29 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
 
         Intent recipeIntent = getIntent();
         mRecipe = recipeIntent.getParcelableExtra("thisRecipe");
+        Global.recipeId = Integer.parseInt(mRecipe.getId());
 
         setTitle(mRecipe.getName());
 
-        if(!getResources().getBoolean(R.bool.small_screen)){
+        if (!getResources().getBoolean(R.bool.small_screen)) {
             Toast.makeText(this, "not small screen", Toast.LENGTH_SHORT).show();
             mTwoPane = true;
             if (savedInstanceState == null) {
 
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentManager fragmentManager = getSupportFragmentManager();
 
-            StepsFragment stepsFragment = new StepsFragment();
-            fragmentManager.beginTransaction()
-                    .add(R.id.detail_container, stepsFragment)
-                    .commit();
+                StepsFragment stepsFragment = new StepsFragment();
+                fragmentManager.beginTransaction()
+                        .add(R.id.detail_container, stepsFragment)
+                        .commit();
 
-            //stepsFragment.setRecipeId(mRecipe.getId());
+                //stepsFragment.setRecipeId(mRecipe.getId());
 
-            IngredientsFragment ingredientsFragment = new IngredientsFragment();
-            fragmentManager.beginTransaction()
-                    .add(R.id.steps_detail_container, ingredientsFragment)
-                    .commit();
+                IngredientsFragment ingredientsFragment = new IngredientsFragment();
+                fragmentManager.beginTransaction()
+                        .add(R.id.steps_detail_container, ingredientsFragment)
+                        .commit();
            /* if(mStep == null){
                 Toast.makeText(this, "no step", Toast.LENGTH_SHORT).show();
             }else {
@@ -72,7 +74,7 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
             }*/
             }
         }
-        if(getResources().getBoolean(R.bool.small_screen)) {
+        if (getResources().getBoolean(R.bool.small_screen)) {
             mTwoPane = false;
             StepsFragment stepsFragment = new StepsFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -86,9 +88,6 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
                         .replace(R.id.detail_container, stepsFragment)
                         .commit();
             }
-
-
-            stepsFragment.setRecipeId(mRecipe.getId());
         }
 
     }
@@ -102,7 +101,7 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
             intent.putExtra("thisStep", step);
             startActivity(intent);
         }
-        if (mTwoPane){
+        if (mTwoPane) {
             mStep = step;
             //findViewById(R.id.prev_step).setVisibility(View.INVISIBLE);
             //findViewById(R.id.next_step).setVisibility(View.INVISIBLE);
@@ -117,7 +116,7 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
 
     }
 
-    public void display_ingr(View v){
+    public void display_ingr(View v) {
         Toast.makeText(this, "ingredients clicked", Toast.LENGTH_SHORT).show();
         final Intent intent = new Intent(this, IngredientsActivity.class);
         intent.putExtra("thisRecipe", mRecipe.getId());
@@ -142,7 +141,7 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
                 break;
             case (R.id.settings):
                 Intent intentSettings = new Intent(this, SettingsActivity.class);
-                intentSettings.putParcelableArrayListExtra("recipes", mRecipeArrayList);
+                intentSettings.putParcelableArrayListExtra("recipes", Global.recipes);
                 startActivity(intentSettings);
                 break;
         }

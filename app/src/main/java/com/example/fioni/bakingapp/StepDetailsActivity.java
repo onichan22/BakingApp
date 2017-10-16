@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.example.fioni.bakingapp.fragments.StepDetailsFragment;
+import com.example.fioni.bakingapp.utilities.Global;
 import com.example.fioni.bakingapp.utilities.Step;
 
 /**
@@ -14,10 +15,9 @@ import com.example.fioni.bakingapp.utilities.Step;
  */
 
 public class StepDetailsActivity extends AppCompatActivity {
+    public static String ON_STEP_KEY = "ON STEP";
     Step mStep;
     int mOnStep;
-
-    public static String ON_STEP_KEY = "ON STEP";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +36,27 @@ public class StepDetailsActivity extends AppCompatActivity {
                 StepDetailsFragment newStepDetailsFragment = new StepDetailsFragment();
                 newStepDetailsFragment.setRecipeId(mStep.getR_id());
                 if (v == nextButton) {
-                    mOnStep = mOnStep + 1;
-                    newStepDetailsFragment.setStepId(mOnStep);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.steps_detail_container, newStepDetailsFragment)
-                            .commit();
+                    if (mOnStep < Global.stepSetSize - 1) {
+                        mOnStep = mOnStep + 1;
+                        newStepDetailsFragment.setStepId(mOnStep);
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.steps_detail_container, newStepDetailsFragment)
+                                .commit();
+                    } else {
+                        mOnStep = Global.stepSetSize;
+                    }
+
                 }
                 if (v == prevButton) {
-                    mOnStep = mOnStep - 1;
-                    newStepDetailsFragment.setStepId(mOnStep);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.steps_detail_container, newStepDetailsFragment)
-                            .commit();
+                    if (mOnStep > 0) {
+                        mOnStep = mOnStep - 1;
+                        newStepDetailsFragment.setStepId(mOnStep);
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.steps_detail_container, newStepDetailsFragment)
+                                .commit();
+                    } else {
+                        mOnStep = 0;
+                    }
                 }
             }
         };
