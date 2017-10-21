@@ -3,14 +3,12 @@ package com.example.fioni.bakingapp.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.example.fioni.bakingapp.MainActivity;
 import com.example.fioni.bakingapp.R;
-import com.example.fioni.bakingapp.SettingsActivity;
 
 /**
  * Implementation of App Widget functionality.
@@ -32,35 +30,18 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
-    public static void selectRecipeToDisplay(SettingsActivity settingsActivity) {
+/*    public static void selectRecipeToDisplay(SettingsActivity settingsActivity) {
 
         Context context = settingsActivity.getApplicationContext();
-        String data = String.valueOf(context.getSharedPreferences(SELECTED_RECIPE, Context.MODE_PRIVATE));
-        Intent updateIntent = new Intent();
+        Intent updateIntent = new Intent(context, BakingAppRemoteViewsService.class);
         updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        //updateIntent.putExtra(BakingAppWidgetProvider.WIDGET_ID_KEY, ids);
-        updateIntent.putExtra(BakingAppWidgetProvider.WIDGET_DATA_KEY, data);
         context.sendBroadcast(updateIntent);
-    }
+    }*/
 
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        AppWidgetManager man = AppWidgetManager.getInstance(context);
-        int[] ids = man.getAppWidgetIds(
-                new ComponentName(context, BakingAppWidgetProvider.class));
-        this.onUpdate(context, man, ids);
 
-        /*if (intent.hasExtra(WIDGET_ID_KEY)) {
-            int[] ids = intent.getExtras().getIntArray(WIDGET_ID_KEY);
-            int id = ids[0];
-            if (intent.hasExtra(WIDGET_DATA_KEY)) {
-                //String data = intent.getExtras().getParcelable(WIDGET_DATA_KEY);
-                this.updateAppWidget(context, AppWidgetManager.getInstance(context), id, intent);
-            } else {
-                this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
-            }
-        } else super.onReceive(context, intent);*/
     }
 
     @Override

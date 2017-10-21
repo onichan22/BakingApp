@@ -25,17 +25,18 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
 
     public static final int DEFAULT_RECIPE = 1;
     private static final String WIDGET_DATA_KEY = "widget data key";
-    public int aRecipeId;
+    private static final String SELECTED_RECIPE = "selected recipe";
+    public String aRecipeId = "0";
     List<Ingredients> ingredientsArrayList = new ArrayList<>();
-    String mArgs[] = {String.valueOf(DEFAULT_RECIPE)};
+    //String mArgs[] = {String.valueOf(DEFAULT_RECIPE)};
+    String mArgs[] = {aRecipeId};
     private Context mContext;
     private Cursor mCursor;
 
     public BakingAppRemoteViewsFactory(Context applicationContext, Intent intent) {
         mContext = applicationContext;
-        if (intent.hasExtra(WIDGET_DATA_KEY)) {
-            mArgs = new String[]{(intent.getStringExtra(WIDGET_DATA_KEY))};
-        }
+        aRecipeId = mContext.getSharedPreferences(SELECTED_RECIPE, Context.MODE_PRIVATE).getString(SELECTED_RECIPE, "0");
+
     }
 
     @Override
@@ -63,7 +64,7 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
         if (mCursor != null) {
             mCursor.close();
         }
-
+        aRecipeId = mContext.getSharedPreferences(SELECTED_RECIPE, Context.MODE_PRIVATE).getString(SELECTED_RECIPE, "0");
         Uri uri = BakingContract.Ingredients.CONTENT_URI_INGREDIENTS;
         mCursor = mContext.getContentResolver().query(uri,
                 null,

@@ -1,5 +1,6 @@
 package com.example.fioni.bakingapp;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,7 +14,7 @@ import android.widget.Toast;
 import com.example.fioni.bakingapp.utilities.Ingredients;
 import com.example.fioni.bakingapp.utilities.Recipe;
 import com.example.fioni.bakingapp.utilities.SettingsAdapter;
-import com.example.fioni.bakingapp.widget.BakingAppWidgetProvider;
+import com.example.fioni.bakingapp.widget.BakingAppRemoteViewsService;
 
 import java.util.ArrayList;
 
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 
 public class SettingsActivity extends AppCompatActivity implements SettingsAdapter.SettingsAdapterOnClickHandler {
 
-    public static final String SELECTED_RECIPE = "selected recipe";
+    private static final String SELECTED_RECIPE = "selected recipe";
     public int mRecipeId;
     private RecyclerView mRecyclerView;
     private ArrayList<Recipe> mRecipes;
@@ -49,7 +50,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsAdapt
 
     public void saveSettings(View v){
         //TODO: service for widget
-        BakingAppWidgetProvider.selectRecipeToDisplay(this);
+        Intent updateIntent = new Intent(this, BakingAppRemoteViewsService.class);
+        updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        this.sendBroadcast(updateIntent);
     }
 
 
