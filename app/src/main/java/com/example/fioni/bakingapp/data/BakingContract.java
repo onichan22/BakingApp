@@ -21,7 +21,7 @@ public class BakingContract {
 
     public static final class Recipes implements BaseColumns {
 
-        public static final Uri CONTENT_URI =
+        public static final Uri CONTENT_URI_RECIPES =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_RECIPES).build();
 
         public static final String TABLE_NAME_RECIPES = "recipes";
@@ -35,7 +35,7 @@ public class BakingContract {
 
     public static final class Ingredients implements BaseColumns {
 
-        public static final Uri CONTENT_URI =
+        public static final Uri CONTENT_URI_INGREDIENTS =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_INGREDIENTS).build();
 
         public static final String TABLE_NAME_INGREDIENTS = "ingredients";
@@ -49,7 +49,7 @@ public class BakingContract {
 
     public static final class Steps implements BaseColumns {
 
-        public static final Uri CONTENT_URI =
+        public static final Uri CONTENT_URI_STEPS =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_STEPS).build();
 
         public static final String TABLE_NAME_STEPS = "steps";

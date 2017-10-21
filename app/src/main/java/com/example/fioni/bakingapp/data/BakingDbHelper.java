@@ -28,8 +28,9 @@ public class BakingDbHelper extends SQLiteOpenHelper {
             BakingContract.Ingredients.COL_I_RID + " TEXT NOT NULL," +
             BakingContract.Ingredients.COL_I_QUANTITY + " TEXT NOT NULL," +
             BakingContract.Ingredients.COL_I_MEASURE + " TEXT NOT NULL," +
-            BakingContract.Ingredients.COL_I_NAME + " TEXT NOT NULL " +
-            ");";
+            BakingContract.Ingredients.COL_I_NAME + " TEXT NOT NULL, " +
+            "CONSTRAINT INGID_RID UNIQUE(" + BakingContract.Ingredients.COL_I_NAME + ", " +
+            BakingContract.Ingredients.COL_I_RID + ") ON CONFLICT REPLACE);";
 
     final String SQL_CREATE_STEPS_TABLE = "CREATE TABLE " +
             BakingContract.Steps.TABLE_NAME_STEPS + "(" +
@@ -39,8 +40,9 @@ public class BakingDbHelper extends SQLiteOpenHelper {
             BakingContract.Steps.COL_S_SHORT_DESC + " TEXT NOT NULL," +
             BakingContract.Steps.COL_S_DESC + " TEXT NOT NULL," +
             BakingContract.Steps.COL_S_VIDEO_URL + " ," +
-            BakingContract.Steps.COL_S_THUMB_URL + " " +
-            ");";
+            BakingContract.Steps.COL_S_THUMB_URL + ", " +
+            "CONSTRAINT STEPID_RID UNIQUE(" + BakingContract.Steps.COL_S_RID + ", " +
+            BakingContract.Steps.COL_S_ID + ") ON CONFLICT REPLACE);";
 
     public BakingDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

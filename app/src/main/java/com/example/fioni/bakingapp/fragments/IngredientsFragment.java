@@ -23,6 +23,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.example.fioni.bakingapp.data.BakingContract.Ingredients.COL_I_RID;
+
 /**
  * Created by fioni on 9/15/2017.
  */
@@ -33,6 +35,7 @@ public class IngredientsFragment extends Fragment implements RecipeAdapter.Recip
     public
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
+    String mArgs[] = {String.valueOf(mRecipeId)};
     private View mView;
     private RecipeAdapter mRecipeAdapter;
     private Unbinder unbinder;
@@ -59,11 +62,12 @@ public class IngredientsFragment extends Fragment implements RecipeAdapter.Recip
         mRecyclerView.setAdapter(mRecipeAdapter);
 
         Cursor mCursor = getActivity().getContentResolver().query(
-                BakingContract.Ingredients.CONTENT_URI,
+                BakingContract.Ingredients.CONTENT_URI_INGREDIENTS,
                 null,
-                null,
-                null,
+                COL_I_RID + " = ?",
+                mArgs,
                 null);
+
 
         try {
             while (mCursor.moveToNext()) {

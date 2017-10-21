@@ -57,7 +57,7 @@ public class BakingContentProvider extends ContentProvider {
             case ALL_RECIPES:
                 long id = db.insert(TABLE_NAME_RECIPES, null, values);
                 if (id > 0) {
-                    returnUri = ContentUris.withAppendedId(BakingContract.Recipes.CONTENT_URI, id);
+                    returnUri = ContentUris.withAppendedId(BakingContract.Recipes.CONTENT_URI_RECIPES, id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
@@ -65,7 +65,7 @@ public class BakingContentProvider extends ContentProvider {
             case LIST_INGREDIENTS:
                 long idI = db.insert(TABLE_NAME_INGREDIENTS, null, values);
                 if (idI > 0) {
-                    returnUri = ContentUris.withAppendedId(BakingContract.Ingredients.CONTENT_URI, idI);
+                    returnUri = ContentUris.withAppendedId(BakingContract.Ingredients.CONTENT_URI_INGREDIENTS, idI);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
@@ -73,7 +73,7 @@ public class BakingContentProvider extends ContentProvider {
             case LIST_STEPS:
                 long idS = db.insert(TABLE_NAME_STEPS, null, values);
                 if (idS > 0) {
-                    returnUri = ContentUris.withAppendedId(BakingContract.Steps.CONTENT_URI, idS);
+                    returnUri = ContentUris.withAppendedId(BakingContract.Steps.CONTENT_URI_STEPS, idS);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }

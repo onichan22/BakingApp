@@ -22,7 +22,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget_provider);
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        views.setOnClickPendingIntent(R.id.appwidget_container, pendingIntent);
+        views.setOnClickPendingIntent(R.id.widgetTitleLabel, pendingIntent);
         views.setRemoteAdapter(R.id.widgetListView, intentWidget);
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -31,7 +31,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
 
         Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         intent.setComponent(new ComponentName(settingsActivity, BakingAppWidgetProvider.class));
-        settingsActivity.sendBroadcast(intent);
+        //settingsActivity.sendBroadcast(intent);
     }
 
     @Override
@@ -42,6 +42,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId, intentWidget);
         }
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     @Override

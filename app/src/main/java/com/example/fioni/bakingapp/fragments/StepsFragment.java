@@ -25,6 +25,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.example.fioni.bakingapp.data.BakingContract.Steps.COL_S_RID;
+
 /**
  * Created by fioni on 9/3/2017.
  */
@@ -36,12 +38,14 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
     RecyclerView mRecyclerView;
     public int mRecipeId;
     OnObjectClickListener mCallback;
+    String mArgs[] = {String.valueOf(mRecipeId)};
     private View mView;
     private RecipeAdapter mRecipeAdapter;
     private Parcelable mListState;
     private LinearLayoutManager mLayoutManager;
     private Unbinder unbinder;
     private ArrayList<Step> mStepSet = new ArrayList<Step>();
+
 
     public  StepsFragment(){
 
@@ -75,16 +79,16 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
 
         ButterKnife.bind(this, mView);
         unbinder = ButterKnife.bind(this, mView);
-        mRecyclerView.setLayoutManager(mLayoutManager);
 
         mRecipeAdapter = new RecipeAdapter(this);
 
         Cursor mCursor = getActivity().getContentResolver().query(
-                BakingContract.Steps.CONTENT_URI,
+                BakingContract.Steps.CONTENT_URI_STEPS,
                 null,
-                null,
-                null,
+                COL_S_RID + " = ?",
+                mArgs,
                 null);
+
 
         try {
             while (mCursor.moveToNext()) {
@@ -103,6 +107,8 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
 
         mRecipeAdapter.setStepData(mStepSet);
         mRecyclerView.setAdapter(mRecipeAdapter);
+//        mLayoutManager.onRestoreInstanceState(mListState);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
 /*
         if (isOnline()) {
@@ -141,7 +147,7 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
     public void onActivityCreated(Bundle state) {
         super.onActivityCreated(state);
 
-        // Retrieve list state and list/item positions
+        //Retrieve list state and list/item positions
         if (state != null)
             mListState = state.getParcelable(LIST_STATE_KEY);
     }

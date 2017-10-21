@@ -113,7 +113,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
         } else if (!isOnline()) {
             Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_LONG).show();
             Cursor mCursor = getActivity().getContentResolver().query(
-                    BakingContract.Recipes.CONTENT_URI,
+                    BakingContract.Recipes.CONTENT_URI_RECIPES,
                     null,
                     null,
                     null,
@@ -134,8 +134,8 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
             }
 
             Global.recipes = mArrayList;
-            mRecipeAdapter.setRecipeData(Global.recipes);
-            mCallback_rec.recipeList(Global.recipes);
+            mRecipeAdapter.setRecipeData(mArrayList);
+            mCallback_rec.recipeList(mArrayList);
         }
         return mView;
     }
@@ -171,7 +171,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
             cv.put(BakingContract.Recipes.COL_R_IMAGE, image);
             cv.put(BakingContract.Recipes.COL_R_SERVINGS, servings);
 
-            getActivity().getContentResolver().insert(BakingContract.Recipes.CONTENT_URI, cv);
+            getActivity().getContentResolver().insert(BakingContract.Recipes.CONTENT_URI_RECIPES, cv);
         }
         Global.recipes = recipeDataResults;
     }
@@ -190,7 +190,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
             cv.put(BakingContract.Ingredients.COL_I_MEASURE, measure);
             cv.put(BakingContract.Ingredients.COL_I_QUANTITY, quantity);
 
-            getActivity().getContentResolver().insert(BakingContract.Ingredients.CONTENT_URI, cv);
+            getActivity().getContentResolver().insert(BakingContract.Ingredients.CONTENT_URI_INGREDIENTS, cv);
         }
         Global.ingredients = recipeDataResults;
     }
@@ -214,7 +214,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
             cv.put(BakingContract.Steps.COL_S_VIDEO_URL, videoURL);
             cv.put(BakingContract.Steps.COL_S_THUMB_URL, thumbURL);
 
-            getActivity().getContentResolver().insert(BakingContract.Steps.CONTENT_URI, cv);
+            getActivity().getContentResolver().insert(BakingContract.Steps.CONTENT_URI_STEPS, cv);
         }
         Global.steps = recipeDataResults;
     }

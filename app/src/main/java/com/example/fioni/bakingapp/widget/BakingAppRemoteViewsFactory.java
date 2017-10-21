@@ -3,24 +3,20 @@ package com.example.fioni.bakingapp.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.example.fioni.bakingapp.R;
 import com.example.fioni.bakingapp.data.BakingContract;
-import com.example.fioni.bakingapp.utilities.BakingJSonUtil;
 import com.example.fioni.bakingapp.utilities.Ingredients;
-import com.example.fioni.bakingapp.utilities.NetworkUtils;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.fioni.bakingapp.data.BakingContract.Ingredients.COL_I_RID;
 
 /**
  * Created by fioni on 9/17/2017.
@@ -32,6 +28,7 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
     public static final int DEFAULT_RECIPE = 1;
     public int aRecipeId;
     List<Ingredients> ingredientsArrayList = new ArrayList<>();
+    String mArgs[] = {String.valueOf(DEFAULT_RECIPE)};
     private Context mContext;
     private Cursor mCursor;
 
@@ -41,14 +38,17 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
 
     @Override
     public void onCreate() {
+        //String mArgs[] = {String.valueOf(DEFAULT_RECIPE)};
 
-        Uri uri = Uri.parse(BakingContract.PATH_INGREDIENTS);
+        Uri uri = BakingContract.Ingredients.CONTENT_URI_INGREDIENTS;
 
         mCursor = mContext.getContentResolver().query(uri,
                 null,
-                null,
-                null,
-                String.valueOf(DEFAULT_RECIPE));
+                COL_I_RID + " = ?",
+                mArgs,
+                null);
+
+        DatabaseUtils.dumpCursor(mCursor);
         //aRecipeId = DEFAULT_RECIPE;
         //URL recipeSearchUrl = NetworkUtils.buildUrl();
         //new QueryAllIngredientsTask().execute(recipeSearchUrl);
@@ -62,12 +62,14 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
             mCursor.close();
         }
 
-        Uri uri = Uri.parse(BakingContract.PATH_INGREDIENTS);
+        Uri uri = BakingContract.Ingredients.CONTENT_URI_INGREDIENTS;
         mCursor = mContext.getContentResolver().query(uri,
                 null,
-                null,
-                null,
-                String.valueOf(DEFAULT_RECIPE));
+                COL_I_RID + " = ?",
+                mArgs,
+                null);
+
+
         /*aRecipeId = mContext.getSharedPreferences(SELECTED_RECIPE, 0).getInt(SELECTED_RECIPE, 1);
         URL recipeSearchUrl = NetworkUtils.buildUrl();
         new QueryIngredientsTask().execute(recipeSearchUrl);*/
@@ -95,9 +97,9 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
         }
 
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.ingredient_list);
-        rv.setTextViewText(R.id.quantity_tv, ingredientsArrayList.get(position).getQuantity());
-        rv.setTextViewText(R.id.measure_tv, ingredientsArrayList.get(position).getMeasure());
-        rv.setTextViewText(R.id.ingr_name_tv, ingredientsArrayList.get(position).getIngr_name());
+        rv.setTextViewText(R.id.quantity_tv, mCursor.getString(2));
+        rv.setTextViewText(R.id.measure_tv, mCursor.getString(3));
+        rv.setTextViewText(R.id.ingr_name_tv, mCursor.getString(4));
 
         return rv;
         //TODO 002 pending intent to open the application
@@ -124,36 +126,5 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
         return true;
     }
 
-    public class QueryIngredientsTask extends AsyncTask<URL, Void, ArrayList<Ingredients>> {
-
-        @Override
-        protected ArrayList<Ingredients> doInBackground(URL... params) {
-            URL searchUrl = params[0];
-            String recipeSearchResults = null;
-            try {
-                recipeSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-
-                ArrayList<Ingredients> ingredients = BakingJSonUtil.getIngredientsFromJson(mContext, recipeSearchResults, aRecipeId);
-
-                return ingredients;
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Ingredients> recipeDataResults) {
-            if (recipeDataResults != null) {
-                ingredientsArrayList = recipeDataResults;
-                onDataSetChanged();
-            }
-        }
-    }
 
 }

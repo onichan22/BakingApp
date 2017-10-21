@@ -52,7 +52,7 @@
             android:name=".data.BakingContentProvider"
             android:authorities="com.example.fioni.bakingapp.provider"
             android:enabled="true"
-            android:exported="false"></provider>
+            android:exported="true"></provider>
     </application>
 
 </manifest>
