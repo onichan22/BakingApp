@@ -65,6 +65,8 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
             mCursor.close();
         }
         aRecipeId = mContext.getSharedPreferences(SELECTED_RECIPE, Context.MODE_PRIVATE).getString(SELECTED_RECIPE, "0");
+        mArgs[0] = aRecipeId;
+
         Uri uri = BakingContract.Ingredients.CONTENT_URI_INGREDIENTS;
         mCursor = mContext.getContentResolver().query(uri,
                 null,
