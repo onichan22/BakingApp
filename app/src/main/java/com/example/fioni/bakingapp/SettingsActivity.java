@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.example.fioni.bakingapp.utilities.Ingredients;
 import com.example.fioni.bakingapp.utilities.Recipe;
 import com.example.fioni.bakingapp.utilities.SettingsAdapter;
-import com.example.fioni.bakingapp.widget.BakingAppRemoteViewsService;
 import com.example.fioni.bakingapp.widget.BakingAppWidgetProvider;
 
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsAdapt
     public void saveSettings(View v){
         //TODO: service for widget
         int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), BakingAppWidgetProvider.class));
-        Intent updateIntent = new Intent(this, BakingAppRemoteViewsService.class);
+        Intent updateIntent = new Intent(this, BakingAppWidgetProvider.class);
         updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         this.sendBroadcast(updateIntent);
