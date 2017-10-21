@@ -3,7 +3,6 @@ package com.example.fioni.bakingapp.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
@@ -24,8 +23,8 @@ import static com.example.fioni.bakingapp.data.BakingContract.Ingredients.COL_I_
 
 public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    public static final String SELECTED_RECIPE = "selected recipe";
     public static final int DEFAULT_RECIPE = 1;
+    private static final String WIDGET_DATA_KEY = "widget data key";
     public int aRecipeId;
     List<Ingredients> ingredientsArrayList = new ArrayList<>();
     String mArgs[] = {String.valueOf(DEFAULT_RECIPE)};
@@ -34,6 +33,9 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
 
     public BakingAppRemoteViewsFactory(Context applicationContext, Intent intent) {
         mContext = applicationContext;
+        if (intent.hasExtra(WIDGET_DATA_KEY)) {
+            mArgs = new String[]{(intent.getStringExtra(WIDGET_DATA_KEY))};
+        }
     }
 
     @Override
@@ -48,7 +50,7 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
                 mArgs,
                 null);
 
-        DatabaseUtils.dumpCursor(mCursor);
+        //DatabaseUtils.dumpCursor(mCursor);
         //aRecipeId = DEFAULT_RECIPE;
         //URL recipeSearchUrl = NetworkUtils.buildUrl();
         //new QueryAllIngredientsTask().execute(recipeSearchUrl);

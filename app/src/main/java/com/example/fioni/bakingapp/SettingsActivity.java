@@ -64,7 +64,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsAdapt
         editor.putString(SELECTED_RECIPE, aRecipe.getId());
         editor.apply();
 
-        BakingAppWidgetProvider.selectRecipeToDisplay(this);
+        //BakingAppWidgetProvider.selectRecipeToDisplay(this);
 
     }
 

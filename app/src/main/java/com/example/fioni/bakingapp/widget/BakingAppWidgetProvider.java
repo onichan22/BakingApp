@@ -17,6 +17,10 @@ import com.example.fioni.bakingapp.SettingsActivity;
  */
 public class BakingAppWidgetProvider extends AppWidgetProvider {
 
+    public static final String SELECTED_RECIPE = "selected recipe";
+    private static final String WIDGET_ID_KEY = "widget id key";
+    private static final String WIDGET_DATA_KEY = "widget data key";
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, Intent intentWidget) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget_provider);
@@ -24,14 +28,39 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         views.setOnClickPendingIntent(R.id.widgetTitleLabel, pendingIntent);
         views.setRemoteAdapter(R.id.widgetListView, intentWidget);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, views.getLayoutId());
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     public static void selectRecipeToDisplay(SettingsActivity settingsActivity) {
 
-        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        intent.setComponent(new ComponentName(settingsActivity, BakingAppWidgetProvider.class));
-        //settingsActivity.sendBroadcast(intent);
+        Context context = settingsActivity.getApplicationContext();
+        String data = String.valueOf(context.getSharedPreferences(SELECTED_RECIPE, Context.MODE_PRIVATE));
+        Intent updateIntent = new Intent();
+        updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        //updateIntent.putExtra(BakingAppWidgetProvider.WIDGET_ID_KEY, ids);
+        updateIntent.putExtra(BakingAppWidgetProvider.WIDGET_DATA_KEY, data);
+        context.sendBroadcast(updateIntent);
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        AppWidgetManager man = AppWidgetManager.getInstance(context);
+        int[] ids = man.getAppWidgetIds(
+                new ComponentName(context, BakingAppWidgetProvider.class));
+        this.onUpdate(context, man, ids);
+
+        /*if (intent.hasExtra(WIDGET_ID_KEY)) {
+            int[] ids = intent.getExtras().getIntArray(WIDGET_ID_KEY);
+            int id = ids[0];
+            if (intent.hasExtra(WIDGET_DATA_KEY)) {
+                //String data = intent.getExtras().getParcelable(WIDGET_DATA_KEY);
+                this.updateAppWidget(context, AppWidgetManager.getInstance(context), id, intent);
+            } else {
+                this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
+            }
+        } else super.onReceive(context, intent);*/
     }
 
     @Override

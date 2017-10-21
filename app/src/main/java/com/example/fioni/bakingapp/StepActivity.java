@@ -26,12 +26,12 @@ import java.util.ArrayList;
 
 public class StepActivity extends AppCompatActivity implements StepsFragment.OnObjectClickListener, RecipeFragment.GiveRecipeList {
 
+    private static final String TAG_RETAINED_FRAGMENT = "RetainedFragment";
     public ArrayList<Recipe> mRecipeArrayList;
-
-    Recipe mRecipe;
     Step mStep;
-
     Boolean mTwoPane;
+    private Recipe mRecipe;
+    private StepsFragment mRetainedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +48,23 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
 
         setTitle(mRecipe.getName());
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        mRetainedFragment = (StepsFragment) fragmentManager.findFragmentByTag(TAG_RETAINED_FRAGMENT);
+        if (mRetainedFragment == null) {
+            // add the fragment
+            mRetainedFragment = new StepsFragment();
+            // load data from a data source or perform any calculation
+        }
+
+
         if (!getResources().getBoolean(R.bool.small_screen)) {
             Toast.makeText(this, "not small screen", Toast.LENGTH_SHORT).show();
             mTwoPane = true;
             if (savedInstanceState == null) {
 
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-
-                StepsFragment stepsFragment = new StepsFragment();
+                //StepsFragment stepsFragment = new StepsFragment();
                 fragmentManager.beginTransaction()
-                        .add(R.id.detail_container, stepsFragment)
+                        .add(R.id.detail_container, mRetainedFragment, TAG_RETAINED_FRAGMENT)
                         .commit();
 
                 //stepsFragment.setRecipeId(mRecipe.getId());
@@ -67,25 +73,20 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
                 fragmentManager.beginTransaction()
                         .add(R.id.steps_detail_container, ingredientsFragment)
                         .commit();
-           /* if(mStep == null){
-                Toast.makeText(this, "no step", Toast.LENGTH_SHORT).show();
-            }else {
-                stepDetailsFragment.setStepId(mStep);
-            }*/
             }
         }
         if (getResources().getBoolean(R.bool.small_screen)) {
             mTwoPane = false;
-            StepsFragment stepsFragment = new StepsFragment();
-            FragmentManager fragmentManager = getSupportFragmentManager();
+            //StepsFragment stepsFragment = new StepsFragment();
+            //FragmentManager fragmentManager = getSupportFragmentManager();
 
             if (savedInstanceState == null) {
                 fragmentManager.beginTransaction()
-                        .add(R.id.detail_container, stepsFragment)
+                        .add(R.id.detail_container, mRetainedFragment)
                         .commit();
             } else {
                 fragmentManager.beginTransaction()
-                        .replace(R.id.detail_container, stepsFragment)
+                        .attach(mRetainedFragment)
                         .commit();
             }
         }
@@ -154,5 +155,17 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
         mRecipeArrayList = recipe;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isFinishing()) {
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().remove(mRetainedFragment).commit();
+        }
+    }
 }

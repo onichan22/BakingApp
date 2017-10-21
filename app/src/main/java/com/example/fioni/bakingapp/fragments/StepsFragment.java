@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +40,8 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
     public int mRecipeId;
     OnObjectClickListener mCallback;
     String mArgs[] = {String.valueOf(mRecipeId)};
+    int positionIndex = 0;
+    int topView = 0;
     private View mView;
     private RecipeAdapter mRecipeAdapter;
     private Parcelable mListState;
@@ -67,21 +70,6 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            mListState = savedInstanceState.getParcelable(LIST_STATE_KEY);
-            Log.i("This state", mListState.toString());
-
-        } else {
-            mLayoutManager = new LinearLayoutManager(getContext());
-        }
-
-        mView = inflater.inflate(R.layout.recycler_view, container, false);
-
-        ButterKnife.bind(this, mView);
-        unbinder = ButterKnife.bind(this, mView);
-
-        mRecipeAdapter = new RecipeAdapter(this);
-
         Cursor mCursor = getActivity().getContentResolver().query(
                 BakingContract.Steps.CONTENT_URI_STEPS,
                 null,
@@ -105,10 +93,31 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
             mCursor.close();
         }
 
+
+        mView = inflater.inflate(R.layout.recycler_view, container, false);
+
+        ButterKnife.bind(this, mView);
+        unbinder = ButterKnife.bind(this, mView);
+
+        mRecipeAdapter = new RecipeAdapter(this);
+
         mRecipeAdapter.setStepData(mStepSet);
         mRecyclerView.setAdapter(mRecipeAdapter);
-//        mLayoutManager.onRestoreInstanceState(mListState);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        if (savedInstanceState == null) {
+            mLayoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(mLayoutManager);
+
+
+        } else {
+            mListState = savedInstanceState.getParcelable(LIST_STATE_KEY);
+            Log.i("This state", mListState.toString());
+            mLayoutManager = new LinearLayoutManager(getContext());
+            mLayoutManager.onRestoreInstanceState(mListState);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+        }
+
+
 
 /*
         if (isOnline()) {
@@ -156,9 +165,21 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
     public void onResume() {
         super.onResume();
 
-        if (mListState != null) {
-            mLayoutManager.onRestoreInstanceState(mListState);
-        }
+ /*        if (mListState != null) {
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(mListState);
+           ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(positionIndex);
+            positionIndex = 0;
+        }*/
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+
+/*        positionIndex= mLayoutManager.findFirstVisibleItemPosition();
+        View startView = mRecyclerView.getChildAt(0);
+        topView = (startView == null) ? 0 : (startView.getTop() - mRecyclerView.getPaddingTop());*/
     }
 
     @Override
@@ -167,8 +188,13 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
         unbinder.unbind();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
     public interface OnObjectClickListener {
         void onSelectedStep(Step step);
     }
-
 }
