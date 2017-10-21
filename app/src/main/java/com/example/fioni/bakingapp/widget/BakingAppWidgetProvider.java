@@ -26,7 +26,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         views.setOnClickPendingIntent(R.id.widgetTitleLabel, pendingIntent);
         views.setRemoteAdapter(R.id.widgetListView, intentWidget);
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, views.getLayoutId());
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetListView);
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
