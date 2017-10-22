@@ -1,6 +1,7 @@
 package com.example.fioni.bakingapp.utilities;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,14 @@ import java.util.ArrayList;
  */
 
 public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.SettingsAdapterViewHolder>{
+    private final SettingsAdapterOnClickHandler mClickHandler;
     public int mSelectedItem = -1;
     public ArrayList<Recipe> mRecipe;
+
+    public SettingsAdapter(SettingsAdapterOnClickHandler clickHandler) {
+
+        mClickHandler = clickHandler;
+    }
 
     @Override
     public SettingsAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -43,7 +50,6 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Settin
     }
 
     public interface SettingsAdapterOnClickHandler {
-
         void onClick(Recipe aRecipe);
     }
 
@@ -65,13 +71,9 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Settin
         @Override
         public void onClick(View v) {
             mSelectedItem = getAdapterPosition();
-            SettingsAdapterOnClickHandler handler = new SettingsAdapterOnClickHandler() {
-                @Override
-                public void onClick(Recipe aRecipe) {
-                    onClick(mRecipe.get(mSelectedItem));
-                }
-            };
-            //handler.onClick(mRecipe.get(mSelectedItem));
+            Log.i("getAdapterPosition", getAdapterPosition() + "");
+            mClickHandler.onClick(mRecipe.get(mSelectedItem));
+            //handler.onClickRecipe(mRecipe.get(mSelectedItem));
             notifyItemRangeChanged(0, mRecipe.size());
         }
     }

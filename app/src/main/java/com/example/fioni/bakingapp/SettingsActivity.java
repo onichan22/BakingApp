@@ -43,14 +43,14 @@ public class SettingsActivity extends AppCompatActivity implements SettingsAdapt
             setContentView(R.layout.activity_settings);
             mRecyclerView = (RecyclerView) findViewById(R.id.settings_rv);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            SettingsAdapter adapter = new SettingsAdapter();
+            SettingsAdapter adapter = new SettingsAdapter(this);
             mRecyclerView.setAdapter(adapter);
             adapter.setAdapterData(mRecipes);
         }
     }
 
     public void saveSettings(View v){
-        //TODO: service for widget
+        //TODONE: service for widget;
         int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), BakingAppWidgetProvider.class));
         Intent updateIntent = new Intent(this, BakingAppWidgetProvider.class);
         updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -67,8 +67,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsAdapt
 
         SharedPreferences preferredRecipe = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferredRecipe.edit();
-        editor.putString(SELECTED_RECIPE, aRecipe.getId());
-        editor.apply();
+        editor.putString(SELECTED_RECIPE, String.valueOf(mRecipeId));
+        //editor.apply();
+        editor.commit();
 
         //BakingAppWidgetProvider.selectRecipeToDisplay(this);
 
