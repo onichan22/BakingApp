@@ -72,7 +72,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Settin
         public void onClick(View v) {
             mSelectedItem = getAdapterPosition();
             Log.i("getAdapterPosition", getAdapterPosition() + "");
-            mClickHandler.onClick(mRecipe.get(mSelectedItem));
+            mClickHandler.onClick(mRecipe.get(mSelectedItem - 1));
             //handler.onClickRecipe(mRecipe.get(mSelectedItem));
             notifyItemRangeChanged(0, mRecipe.size());
         }

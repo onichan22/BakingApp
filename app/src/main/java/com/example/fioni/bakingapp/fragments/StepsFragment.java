@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.fioni.bakingapp.R;
 import com.example.fioni.bakingapp.data.BakingContract;
+import com.example.fioni.bakingapp.utilities.Global;
 import com.example.fioni.bakingapp.utilities.Recipe;
 import com.example.fioni.bakingapp.utilities.RecipeAdapter;
 import com.example.fioni.bakingapp.utilities.Step;
@@ -37,7 +38,7 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
     public
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
-    public int mRecipeId;
+    public int mRecipeId = Global.recipeId;
     OnObjectClickListener mCallback;
     String mArgs[] = {String.valueOf(mRecipeId)};
     int positionIndex = 0;

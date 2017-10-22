@@ -3,6 +3,7 @@ package com.example.fioni.bakingapp.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
@@ -24,8 +25,8 @@ import static com.example.fioni.bakingapp.data.BakingContract.Ingredients.COL_I_
 public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     public static final int DEFAULT_RECIPE = 1;
-    private static final String WIDGET_DATA_KEY = "widget data key";
     private static final String SELECTED_RECIPE = "selected recipe";
+    private static final String SETTINGS_PREFS = "Settings Preferences";
     public String aRecipeId = "0";
     List<Ingredients> ingredientsArrayList = new ArrayList<>();
     //String mArgs[] = {String.valueOf(DEFAULT_RECIPE)};
@@ -35,7 +36,7 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
 
     public BakingAppRemoteViewsFactory(Context applicationContext, Intent intent) {
         mContext = applicationContext;
-        aRecipeId = mContext.getSharedPreferences(SELECTED_RECIPE, Context.MODE_PRIVATE).getString(SELECTED_RECIPE, "0");
+        aRecipeId = mContext.getSharedPreferences(SETTINGS_PREFS, Context.MODE_PRIVATE).getString(SELECTED_RECIPE, "0");
 
     }
 
@@ -64,7 +65,7 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
         if (mCursor != null) {
             mCursor.close();
         }
-        aRecipeId = mContext.getSharedPreferences(SELECTED_RECIPE, Context.MODE_PRIVATE).getString(SELECTED_RECIPE, "0");
+        aRecipeId = mContext.getSharedPreferences(SETTINGS_PREFS, Context.MODE_PRIVATE).getString(SELECTED_RECIPE, "0");
         mArgs[0] = aRecipeId;
 
         Uri uri = BakingContract.Ingredients.CONTENT_URI_INGREDIENTS;
@@ -74,7 +75,7 @@ public class BakingAppRemoteViewsFactory implements RemoteViewsService.RemoteVie
                 mArgs,
                 null);
 
-
+        DatabaseUtils.dumpCursor(mCursor);
         /*aRecipeId = mContext.getSharedPreferences(SELECTED_RECIPE, 0).getInt(SELECTED_RECIPE, 1);
         URL recipeSearchUrl = NetworkUtils.buildUrl();
         new QueryIngredientsTask().execute(recipeSearchUrl);*/

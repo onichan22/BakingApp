@@ -44,7 +44,7 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
 
         Intent recipeIntent = getIntent();
         mRecipe = recipeIntent.getParcelableExtra("thisRecipe");
-        Global.recipeId = Integer.parseInt(mRecipe.getId());
+        Global.recipeId = Integer.parseInt(mRecipe.getId()) - 1;
 
         setTitle(mRecipe.getName());
 
@@ -53,6 +53,7 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
         if (mRetainedFragment == null) {
             // add the fragment
             mRetainedFragment = new StepsFragment();
+            //mRetainedFragment.setRecipeId(mRecipe.getId());
             // load data from a data source or perform any calculation
         }
 

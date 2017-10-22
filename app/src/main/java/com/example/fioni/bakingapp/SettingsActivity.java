@@ -5,10 +5,10 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 public class SettingsActivity extends AppCompatActivity implements SettingsAdapter.SettingsAdapterOnClickHandler {
 
     private static final String SELECTED_RECIPE = "selected recipe";
+    private static final String SETTINGS_PREFS = "Settings Preferences";
     public int mRecipeId;
     private RecyclerView mRecyclerView;
     private ArrayList<Recipe> mRecipes;
@@ -62,10 +63,11 @@ public class SettingsActivity extends AppCompatActivity implements SettingsAdapt
     @Override
     public void onClick(Recipe aRecipe) {
         mRecipeId = Integer.parseInt(aRecipe.getId());
+        Log.i("The SELECTED RECIPE", String.valueOf(mRecipeId));
         //URL recipeSearchUrl = NetworkUtils.buildUrl();
         //new QueryAllIngredientsTask().execute(recipeSearchUrl);
 
-        SharedPreferences preferredRecipe = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences preferredRecipe = this.getSharedPreferences(SETTINGS_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferredRecipe.edit();
         editor.putString(SELECTED_RECIPE, String.valueOf(mRecipeId));
         //editor.apply();

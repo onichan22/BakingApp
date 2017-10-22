@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.fioni.bakingapp.R;
 import com.example.fioni.bakingapp.data.BakingContract;
+import com.example.fioni.bakingapp.utilities.Global;
 import com.example.fioni.bakingapp.utilities.Ingredients;
 import com.example.fioni.bakingapp.utilities.Recipe;
 import com.example.fioni.bakingapp.utilities.RecipeAdapter;
@@ -31,7 +32,7 @@ import static com.example.fioni.bakingapp.data.BakingContract.Ingredients.COL_I_
 
 public class IngredientsFragment extends Fragment implements RecipeAdapter.RecipeAdapterOnClickHandler{
 
-    public int mRecipeId;
+    public int mRecipeId = Global.recipeId;
     public
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
@@ -104,7 +105,7 @@ public class IngredientsFragment extends Fragment implements RecipeAdapter.Recip
     }
 
     public void setRecipeId(String recipeId) {
-        mRecipeId = Integer.parseInt(recipeId) - 1;
+        //mRecipeId = Integer.parseInt(recipeId) - 1;
     }
 
 }
