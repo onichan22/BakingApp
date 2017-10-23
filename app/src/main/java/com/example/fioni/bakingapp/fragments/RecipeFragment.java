@@ -99,6 +99,9 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.RecipeAdap
         if (getResources().getBoolean(R.bool.horizontal)) {
             mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         }
+        if (!getResources().getBoolean(R.bool.horizontal) && !getResources().getBoolean(R.bool.small_screen)) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        }
 
         mRecipeAdapter = new RecipeAdapter(this);
         mRecyclerView.setAdapter(mRecipeAdapter);

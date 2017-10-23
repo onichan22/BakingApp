@@ -10,9 +10,10 @@
         android:id="@+id/my_toolbar"
         android:layout_width="588dp"
         android:layout_height="78dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="-16dp"
+        android:layout_marginStart="8dp"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
@@ -24,18 +25,21 @@
 
     <FrameLayout
         android:id="@+id/recipe_container"
-        android:layout_width="match_parent"
-        android:layout_height="235dp"
+        android:layout_width="579dp"
+        android:layout_height="256dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:scaleType="centerInside"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
-        app:layout_constraintVertical_bias="0.733" />
+        app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>

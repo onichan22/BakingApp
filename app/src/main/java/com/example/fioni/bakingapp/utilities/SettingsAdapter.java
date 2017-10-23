@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * Created by fioni on 9/16/2017.
  */
 
-public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.SettingsAdapterViewHolder>{
+public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.SettingsAdapterViewHolder> {
     private final SettingsAdapterOnClickHandler mClickHandler;
     public int mSelectedItem = -1;
     public ArrayList<Recipe> mRecipe;

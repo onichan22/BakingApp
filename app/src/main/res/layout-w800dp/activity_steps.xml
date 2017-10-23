@@ -17,34 +17,41 @@
         android:clickable="true"
         android:onClick="display_ingr"
         android:text="@string/ingredients"
+        app:layout_constraintHorizontal_bias="0.153"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/steps_detail_container"
-        tools:layout_editor_absoluteY="0dp" />
+        tools:layout_editor_absoluteY="16dp" />
 
 
     <FrameLayout
         android:id="@+id/detail_container"
-        android:layout_width="294dp"
-        android:layout_height="266dp"
+        android:layout_width="299dp"
+        android:layout_height="421dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ingredient_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/ingredient_tv"
+        app:layout_constraintVertical_bias="0.0" />
 
     <FrameLayout
         android:id="@+id/steps_detail_container"
-        android:layout_width="300dp"
-        android:layout_height="345dp"
+        android:layout_width="623dp"
+        android:layout_height="500dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:scaleType="centerInside"
-        app:layout_constraintHorizontal_bias="0.269"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.843"
         app:layout_constraintLeft_toRightOf="@+id/detail_container"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.89"
+        tools:layout_editor_absoluteX="322dp"
+        tools:layout_editor_absoluteY="15dp" />
 
 </android.support.constraint.ConstraintLayout>

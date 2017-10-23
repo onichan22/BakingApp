@@ -71,30 +71,31 @@ public class StepsFragment extends Fragment implements RecipeAdapter.RecipeAdapt
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Cursor mCursor = getActivity().getContentResolver().query(
-                BakingContract.Steps.CONTENT_URI_STEPS,
-                null,
-                COL_S_RID + " = ?",
-                mArgs,
-                null);
+        if (savedInstanceState == null) {
+            Cursor mCursor = getActivity().getContentResolver().query(
+                    BakingContract.Steps.CONTENT_URI_STEPS,
+                    null,
+                    COL_S_RID + " = ?",
+                    mArgs,
+                    null);
 
 
-        try {
-            while (mCursor.moveToNext()) {
+            try {
+                while (mCursor.moveToNext()) {
 
-                // The Cursor is now set to the right position
-                mStepSet.add(new Step(mCursor.getString(1),
-                        mCursor.getString(2),
-                        mCursor.getString(3),
-                        mCursor.getString(4),
-                        mCursor.getString(5),
-                        mCursor.getString(6)));
+                    // The Cursor is now set to the right position
+                    mStepSet.add(new Step(mCursor.getString(1),
+                            mCursor.getString(2),
+                            mCursor.getString(3),
+                            mCursor.getString(4),
+                            mCursor.getString(5),
+                            mCursor.getString(6)));
+                }
+            } finally {
+                mCursor.close();
             }
-        } finally {
-            mCursor.close();
+
         }
-
-
         mView = inflater.inflate(R.layout.recycler_view, container, false);
 
         ButterKnife.bind(this, mView);

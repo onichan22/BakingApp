@@ -8,13 +8,18 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
-        android:layout_width="368dp"
-        android:layout_height="56dp"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="2dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="2dp"
         android:layout_marginTop="8dp"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -22,31 +27,23 @@
 
     <TextView
         android:id="@+id/ingredient_tv"
-        android:layout_width="368dp"
-        android:layout_height="80dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_width="450dp"
+        android:layout_height="92dp"
         android:layout_marginTop="8dp"
         android:clickable="true"
         android:onClick="display_ingr"
         android:text="@string/ingredients"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
+        tools:layout_editor_absoluteX="11dp" />
 
     <FrameLayout
         android:id="@+id/detail_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="450dp"
+        android:layout_height="400dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="8dp"
         android:scaleType="centerInside"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ingredient_tv" />
 
 </android.support.constraint.ConstraintLayout>
