@@ -27,11 +27,11 @@ public class StepDetailsActivity extends AppCompatActivity {
         Intent recipeIntent = getIntent();
         mStep = recipeIntent.getParcelableExtra("thisStep");
 
-        setContentView(R.layout.activity_steps_detail);
+        setContentView(R.layout.activity_steps);
 
         final View nextButton = findViewById(R.id.next_step);
         final View prevButton = findViewById(R.id.prev_step);
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        final FragmentManager fragmentManager = getSupportFragmentManager();
         mRetainedFragment = (StepDetailsFragment) fragmentManager.findFragmentByTag(TAG_RETAINED_FRAGMENT);
         if (mRetainedFragment == null) {
             // add the fragment
@@ -43,12 +43,15 @@ public class StepDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //StepDetailsFragment newStepDetailsFragment = new StepDetailsFragment();
-                mRetainedFragment.setRecipeId(mStep.getR_id());
+                //mRetainedFragment.setRecipeId(mStep.getR_id());
                 if (v == nextButton) {
                     if (mOnStep < Global.stepSetSize - 1) {
                         mOnStep = mOnStep + 1;
+                        StepDetailsFragment newRetainedFragment = new StepDetailsFragment();
+                        mRetainedFragment = newRetainedFragment;
                         mRetainedFragment.setStepId(mOnStep);
-                        getSupportFragmentManager().beginTransaction()
+                        //fragmentManager.beginTransaction().remove(mRetainedFragment).commit();
+                        fragmentManager.beginTransaction()
                                 .replace(R.id.steps_detail_container, mRetainedFragment)
                                 .commit();
                     } else {
@@ -59,6 +62,8 @@ public class StepDetailsActivity extends AppCompatActivity {
                 if (v == prevButton) {
                     if (mOnStep > 0) {
                         mOnStep = mOnStep - 1;
+                        StepDetailsFragment newRetainedFragment = new StepDetailsFragment();
+                        mRetainedFragment = newRetainedFragment;
                         mRetainedFragment.setStepId(mOnStep);
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.steps_detail_container, mRetainedFragment)

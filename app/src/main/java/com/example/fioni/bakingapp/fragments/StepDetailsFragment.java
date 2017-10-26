@@ -75,7 +75,7 @@ public class StepDetailsFragment extends Fragment {
             //mRecipeId = mStep.getR_id();
         } else if (savedInstanceState == null) {
             for (int i = 0; i < Global.steps.size(); i++) {
-                if (Global.steps.get(i).getR_id().equals(String.valueOf(Global.recipeId - 1))) {
+                if (Global.steps.get(i).getR_id().equals(String.valueOf(Global.recipeId))) {
                     mStepSet.add(new Step(Global.steps.get(i).getR_id(),
                             Global.steps.get(i).getId(),
                             Global.steps.get(i).getShort_desc(),

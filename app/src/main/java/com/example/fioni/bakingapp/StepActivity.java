@@ -26,12 +26,14 @@ import java.util.ArrayList;
 
 public class StepActivity extends AppCompatActivity implements StepsFragment.OnObjectClickListener, RecipeFragment.GiveRecipeList {
 
-    private static final String TAG_RETAINED_FRAGMENT = "RetainedFragment";
+    private static final String TAG_RETAINED_FRAGMENT = "RetainedStepFragment";
+    private static final String TAG_RETAINED_DFRAGMENT = "RetainedDetailFragment";
     public ArrayList<Recipe> mRecipeArrayList;
     Step mStep;
     Boolean mTwoPane;
     private Recipe mRecipe;
-    private StepsFragment mRetainedFragment;
+    private StepsFragment mRetainedStepFragment;
+    private StepDetailsFragment mRetainedDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +51,10 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
         setTitle(mRecipe.getName());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        mRetainedFragment = (StepsFragment) fragmentManager.findFragmentByTag(TAG_RETAINED_FRAGMENT);
-        if (mRetainedFragment == null) {
+        mRetainedStepFragment = (StepsFragment) fragmentManager.findFragmentByTag(TAG_RETAINED_FRAGMENT);
+        if (mRetainedStepFragment == null) {
             // add the fragment
-            mRetainedFragment = new StepsFragment();
+            mRetainedStepFragment = new StepsFragment();
             //mRetainedFragment.setRecipeId(mRecipe.getId());
             // load data from a data source or perform any calculation
         }
@@ -61,11 +63,20 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
         if (!getResources().getBoolean(R.bool.small_screen)) {
             Toast.makeText(this, "not small screen", Toast.LENGTH_SHORT).show();
             mTwoPane = true;
+
+            mRetainedDetailFragment = (StepDetailsFragment) fragmentManager.findFragmentByTag(TAG_RETAINED_DFRAGMENT);
+            if (mRetainedDetailFragment == null) {
+                // add the fragment
+                mRetainedDetailFragment = new StepDetailsFragment();
+                //mRetainedFragment.setRecipeId(mRecipe.getId());
+                // load data from a data source or perform any calculation
+            }
+
             if (savedInstanceState == null) {
 
                 //StepsFragment stepsFragment = new StepsFragment();
                 fragmentManager.beginTransaction()
-                        .add(R.id.detail_container, mRetainedFragment, TAG_RETAINED_FRAGMENT)
+                        .add(R.id.detail_container, mRetainedStepFragment, TAG_RETAINED_FRAGMENT)
                         .commit();
 
                 //stepsFragment.setRecipeId(mRecipe.getId());
@@ -74,6 +85,15 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
                 fragmentManager.beginTransaction()
                         .add(R.id.steps_detail_container, ingredientsFragment)
                         .commit();
+            } else {
+                fragmentManager.beginTransaction()
+                        .attach(mRetainedStepFragment)
+                        .commit();
+                //IngredientsFragment ingredientsFragment = new IngredientsFragment();
+                fragmentManager.beginTransaction()
+                        .attach(mRetainedDetailFragment)
+                        .commit();
+
             }
         }
         if (getResources().getBoolean(R.bool.small_screen)) {
@@ -83,11 +103,11 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
 
             if (savedInstanceState == null) {
                 fragmentManager.beginTransaction()
-                        .add(R.id.detail_container, mRetainedFragment)
+                        .add(R.id.detail_container, mRetainedStepFragment)
                         .commit();
             } else {
                 fragmentManager.beginTransaction()
-                        .attach(mRetainedFragment)
+                        .attach(mRetainedStepFragment)
                         .commit();
             }
         }
@@ -108,11 +128,12 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
             //findViewById(R.id.prev_step).setVisibility(View.INVISIBLE);
             //findViewById(R.id.next_step).setVisibility(View.INVISIBLE);
             StepDetailsFragment newStepDetailsFragment = new StepDetailsFragment();
-            newStepDetailsFragment.setRecipeId(mStep.getR_id());
-            newStepDetailsFragment.setStepId(Integer.parseInt(mStep.getId()));
+            mRetainedDetailFragment = newStepDetailsFragment;
+            mRetainedDetailFragment.setRecipeId(mStep.getR_id());
+            mRetainedDetailFragment.setStepId(Integer.parseInt(mStep.getId()));
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.steps_detail_container, newStepDetailsFragment)
+                    .replace(R.id.steps_detail_container, mRetainedDetailFragment)
                     .commit();
         }
 
@@ -164,9 +185,12 @@ public class StepActivity extends AppCompatActivity implements StepsFragment.OnO
     @Override
     protected void onPause() {
         super.onPause();
+        FragmentManager fm = getSupportFragmentManager();
         if (isFinishing()) {
-            FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction().remove(mRetainedFragment).commit();
+            fm.beginTransaction().remove(mRetainedStepFragment).commit();
+            if (mTwoPane) {
+                fm.beginTransaction().remove(mRetainedDetailFragment).commit();
+            }
         }
     }
 }
