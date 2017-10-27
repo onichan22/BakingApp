@@ -14,7 +14,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,13 +23,16 @@
         </activity>
         <activity
             android:name=".StepActivity"
-            android:label="Detail Activity" />
+            android:label="Detail Activity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".StepDetailsActivity"
-            android:label="Step Details Activity" />
+            android:label="Step Details Activity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".IngredientsActivity"
-            android:label="Ingredients Activity" />
+            android:label="Ingredients Activity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".SettingsActivity"
             android:label="Settings Activity" />

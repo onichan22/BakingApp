@@ -70,7 +70,9 @@ public class StepDetailsFragment extends Fragment {
             mPosition = savedInstanceState.getLong(PLAYER_POSITION, C.TIME_UNSET);
             setStepId(Integer.parseInt(mStep.getId()));
             setupViews();
-            if (mPosition != C.TIME_UNSET) mExoPlayer.seekTo(mPosition);
+            if (mExoPlayer != null) {
+                if (mPosition != C.TIME_UNSET) mExoPlayer.seekTo(mPosition);
+            }
 
             //mRecipeId = mStep.getR_id();
         } else if (savedInstanceState == null) {

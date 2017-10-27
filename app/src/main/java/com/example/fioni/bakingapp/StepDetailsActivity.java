@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.fioni.bakingapp.fragments.StepDetailsFragment;
@@ -27,7 +30,9 @@ public class StepDetailsActivity extends AppCompatActivity {
         Intent recipeIntent = getIntent();
         mStep = recipeIntent.getParcelableExtra("thisStep");
 
-        setContentView(R.layout.activity_steps);
+        setContentView(R.layout.activity_steps_detail);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         final View nextButton = findViewById(R.id.next_step);
         final View prevButton = findViewById(R.id.prev_step);
@@ -97,6 +102,7 @@ public class StepDetailsActivity extends AppCompatActivity {
                     .attach(mRetainedFragment)
                     .commit();
         }
+
     }
 
     @Override
@@ -112,5 +118,30 @@ public class StepDetailsActivity extends AppCompatActivity {
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().remove(mRetainedFragment).commit();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int itemClicked = item.getItemId();
+        switch (itemClicked) {
+            case (R.id.recipes):
+                Intent intentRecipe = new Intent(this, MainActivity.class);
+                startActivity(intentRecipe);
+                break;
+            case (R.id.settings):
+                Intent intentSettings = new Intent(this, SettingsActivity.class);
+                intentSettings.putParcelableArrayListExtra("recipes", Global.recipes);
+                startActivity(intentSettings);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
